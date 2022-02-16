@@ -4,7 +4,11 @@
 
 **URLConf**: mapping between URL path expressions to python functions
 
+**Models (database)**: datababase layout, with additional metadata
+
 <h2>General</h2>
+
+Default apps require the use of at least one database table so run python manage.py migrate before using them.
 
 Don't put python code within the web server's document root, because it may be possible.
 
@@ -73,3 +77,37 @@ not intended for production, just for developing. use a real webserver for devel
 <h2>Views</h2>
 functions, to call a view, it needs to be mapped to a URL
 
+<h2>Models</h2>
+A model is the database layout. It contains the essnetial fiels and behaviors of the data you're storing.
+Models are represented as classes in models.py.
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+Each model has a number of class variables, which represent a database field in the model.
+Each field is represented by an instance of a Field class like CharField for character fields, and DateTimeField for date times.
+The database uses the field name as the column name. Some field classes have required arguments, others have several optional arguments.
+Relationships are defined with ForeignKey. In the above example, the foreign key relates each choice to a single question.
+
+<h2>Settings</h2>
+Installed apps: holds the named of all django applications that are activated in the django instance.
+Default apps are:
+    'django.contrib.admin'
+    'django.contrib.auth': authentication system
+    'django.contrib.contenttypes': framework for content types
+    'django.contrib.sessions': session framework
+    'django.contrib.messages': messaging framework
+    'django.contrib.staticfiles: framework for managing static files
+
+<h2>Database setup</h2>
+Go to the DATABASES setting of settings.py
+Put in the appropriate database connection settings.
+For example, if you are using postgresql then the engine will be 'django.db.backends.postgresql'
+For databases other than SQLite, you need USER, PASSSWORD and HOST.
+Refer to: https://docs.djangoproject.com/en/4.0/ref/settings/#std:setting-DATABASES
