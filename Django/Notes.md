@@ -8,6 +8,8 @@
 
 <h2>General</h2>
 
+To include an app in a project, add a reference to its configuration class in the installed_apps setting.
+
 Default apps require the use of at least one database table so run python manage.py migrate before using them.
 
 Don't put python code within the web server's document root, because it may be possible.
@@ -33,6 +35,12 @@ path() function is passed 4 arguments: 2 required: route and view, two optional:
     view: when django finds a matching pattern, it calls the specified view function with an HttpRequest object as the first arg and any "captured" values from the route as keyword elements
     kwargs: arguments
     name: can name your url to refer to it unambiguously from elsewhere in Django. lets you make global changes to the URL patterns of the project while only touching a single file
+
+Simple three step guide to making model changes:
+    1. change models in models.py
+    2. run python manage.py makemigrations to create migrations for those changes (it's like staging changes like git add)
+    3. run python manage.py migrate to apply those changes to the database (like running git commit)
+
 
 <h2>Commands:</h2>
 
@@ -73,6 +81,20 @@ creates an app, which includes:
 starts the development server on internal IP at port 8000, to specify a specific port, pass it as an argument
 i.e: python manage.py runserver 8000
 not intended for production, just for developing. use a real webserver for development, like Apache, NGINX
+
+**makemigrations:**
+command to run when you make changes to the models and want the changes to be stored as a migration
+a migration is how django stores changes to the models
+
+**migrate:**
+takes all migrations that haven't been applied and syncs changes to the models with the schema in the DB 
+
+**sqlmigrate:**
+prints to the screen what SQL Django thinks is required for the migration
+
+**check**:
+checks for any problems in project without making migrations or touching DB
+
 
 <h2>Views</h2>
 functions, to call a view, it needs to be mapped to a URL
