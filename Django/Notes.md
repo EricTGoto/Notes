@@ -96,7 +96,31 @@ checks for any problems in project without making migrations or touching DB
 
 
 <h2>Views</h2>
-functions, to call a view, it needs to be mapped to a URL
+functions, to call a view, it needs to be mapped to a URL. Can also be thought of as a type of web page in the django application.
+
+In django, web pages and other contect are delivered by views. Each view is represented by a Python function.
+
+A URL pattern is the general form of a URL. e.g. /newsarchive/<year>/<month>/
+
+def detail(request, question_id):
+    return HttpResponse("You're looking at question %s." % question_id)
+
+if a user requests /polls/34/, it will run the detail() method and display the ID they provide in the URL (34).
+Django loads the mysite.urls python module because its pointed to by the ROOT_URLCONF setting. It finds the variable urlpatterns and traverses the patterns in order.
+It will find a match at 'polls/', then strips off the matching test 'polls/' and sends the remaining text - '34/' to the polls.urls URLconf for further processing. 
+There it matches '<int:question_id>/', resulting in a call to detail() like:
+
+detail(request=<HttpRequest object>, question_id=34)
+
+The question_id=34 part comes from <int:question_id>. Using angle brackets "captures" part of the URL and sends it as a keyword argument to the view function. The question_id part identifies the pattern name and the int part is the converter. : separates the converter and pattern name.
+
+A view just wants the HttpResponse or an exception. The rest is up to the programmer.
+
+We can separate the way a page looks from python by creating a template that the view can use.
+Tip: templates should be namespaced - templates should be put inside another directory named for the application itself polls/templates/polls/
+
+It's very common to load a template, fill a context and return an HttpResponse so Django provides a shortcut with render(), which is from django.shortcuts
+render takes the request object as its first argument, a template name as its second and a dictionary as its optional third argument and returns an HttpResponse.
 
 <h2>Models</h2>
 A model is the database layout. It contains the essnetial fiels and behaviors of the data you're storing.
@@ -167,6 +191,7 @@ Go to the DATABASES setting of settings.py
 Put in the appropriate database connection settings.
 For example, if you are using postgresql then the engine will be 'django.db.backends.postgresql'
 For databases other than SQLite, you need USER, PASSSWORD and HOST.
+
 Refer to: https://docs.djangoproject.com/en/4.0/ref/settings/#std:setting-DATABASES
 
 <h2>Admin</h2>
