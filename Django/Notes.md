@@ -37,13 +37,13 @@ How Django processes a request:
 
 path() function is passed 4 arguments: 2 required: route and view, two optional: kwargs and name
 
-    route: string that contains a URL pattern
+route: string that contains a URL pattern
 
-    view: when django finds a matching pattern, it calls the specified view function with an HttpRequest object as the first arg and any "captured" values from the route as keyword elements
+view: when django finds a matching pattern, it calls the specified view function with an HttpRequest object as the first arg and any "captured" values from the route as keyword elements
 
-    kwargs: arguments
+kwargs: arguments
 
-    name: can name your url to refer to it unambiguously from elsewhere in Django. lets you make global changes to the URL patterns of the project while only touching a single file
+name: can name your url to refer to it unambiguously from elsewhere in Django. lets you make global changes to the URL patterns of the project while only touching a single file
 
 Simple three step guide to making model changes:
 
@@ -68,12 +68,15 @@ xxxxx/
         asgi.py
         wsgi.py
 
-The outer xxxxx/ is the root directory. Can be renamed
-manage.py: command-line utility that lets you interact with the django project
+The outer xxxxx/ is the root directory. Can be renamed manage.py: command-line utility that lets you interact with the django project 
 inner xxxxx/ is the actual python package for the project
+
 settings.py: settings/configurations for the django project
+
 urls.py the URL declarations for the django project, a "table of contents" of the django powered site
+
 asgi.py: an entry point for ASGI compatible web servers to serve your project
+
 wsgi.py: an entry point for WSGI compatible web servers
 
 **startapp:**
@@ -129,8 +132,11 @@ The question_id=34 part comes from <int:question_id>. Using angle brackets "capt
 A view just wants the HttpResponse or an exception. The rest is up to the programmer.
 
 **Templates:**
+
 https://docs.djangoproject.com/en/4.0/topics/templates/
+
 We can separate the way a page looks from python by creating a template that the view can use.
+
 Tip: templates should be namespaced - templates should be put inside another directory named for the application itself polls/templates/polls/
 
 It's very common to load a template, fill a context and return an HttpResponse so Django provides a shortcut with render(), which is from django.shortcuts
@@ -219,36 +225,47 @@ def detail(request, question_id):
 ````
 
 <h2>Models</h2>
-A model is the database layout. It contains the essnetial fiels and behaviors of the data you're storing.
+A model is the database layout. It contains the essential fiels and behaviors of the data you're storing.
 Models are represented as classes in models.py.
 
+````
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
+````
 
+````
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+````
 
 Each model has a number of class variables, which represent a database field in the model.
 Each field is represented by an instance of a Field class like CharField for character fields, and DateTimeField for date times.
 The database uses the field name as the column name. Some field classes have required arguments, others have several optional arguments.
 Relationships are defined with ForeignKey. In the above example, the foreign key relates each choice to a single question.
+
 https://stackoverflow.com/questions/42080864/set-in-django-for-a-queryset
 
 Choice has a foreign key relationship with question meaning that each choice relates to a single question.
 So every choice's question attribute will return its "parent" question. Every question will return its choices.
 This can be done like so:
+
+````
 from django.utils import timezone
 q = Question(question_text="What's new?", pub_date=timezone.now())
 q.save() : this saves the question into the database, must be called explicitly
 q.id : this is the primary key
+````
+
 If we type in Question.objects.all(), we should see the question we just made:
     <QuerySet [<Question: Question object (1)>]>
 
 We can access the question's fields like so:
+
 q.question_text
+
 q.pub_date
 
 We can check for any choice objects related to this. This only works because of the foreign key relationship we created.
@@ -262,7 +279,9 @@ c = q.choice_set.create(choice_text='Just hacking again', votes=0)
 c.question -> will return <Question: What's up?>
 
 **Models API** 
+
 Models API reference: https://docs.djangoproject.com/en/4.0/topics/db/queries/
+
 [object].save() to save an object into the database
 [model name].objects.all() to list all objects in the model
 [model name].objects.filter(FILTER) to filter with some filter
