@@ -20,26 +20,38 @@ To call a view, we need to map it to a URL.
 
 URL dispatcher: https://docs.djangoproject.com/en/4.0/topics/http/urls/
 How Django processes a request:
-    1. Django determines the root URLconf module to use. Normally, this is the value of the root_urlconf setting, but if the incoming HttpRequest object has a urlconf
+
+1. Django determines the root URLconf module to use. Normally, this is the value of the root_urlconf setting, but if the incoming HttpRequest object has a urlconf
         attribute, its value will be used instead
-    2. Django loads that python module and looks for the variable urlpatterns
-    3. Django runs through each URL pattern, in order, and stops at the first one that matches the requested URl, matching against path_info
-    4. Once the URL pattern matches, django imports and calls the given view, which is a python function. View gets passed the following arguments:
-        * instance of HttpRequest
-        * if the matched URl pattern contained no named groups, then the matches from the regex are provided as positional arguments
-        * the keyword arguments are made up of any named parts matched by the path expression that are provided, overridden by any arguments specified in the optional kwargs argument to django.urls.path() or django.urls.re_path()
-    5. If no url pattern matches, or exception raised, Django invoked an error handling view
+
+2. Django loads that python module and looks for the variable urlpatterns
+
+3. Django runs through each URL pattern, in order, and stops at the first one that matches the requested URl, matching against path_info
+
+4. Once the URL pattern matches, django imports and calls the given view, which is a python function. View gets passed the following arguments:
+    * instance of HttpRequest
+    * if the matched URl pattern contained no named groups, then the matches from the regex are provided as positional arguments
+    * the keyword arguments are made up of any named parts matched by the path expression that are provided, overridden by any arguments specified in the optional kwargs argument to django.urls.path() or django.urls.re_path()
+
+5. If no url pattern matches, or exception raised, Django invoked an error handling view
 
 path() function is passed 4 arguments: 2 required: route and view, two optional: kwargs and name
+
     route: string that contains a URL pattern
+
     view: when django finds a matching pattern, it calls the specified view function with an HttpRequest object as the first arg and any "captured" values from the route as keyword elements
+
     kwargs: arguments
+
     name: can name your url to refer to it unambiguously from elsewhere in Django. lets you make global changes to the URL patterns of the project while only touching a single file
 
 Simple three step guide to making model changes:
-    1. change models in models.py
-    2. run python manage.py makemigrations to create migrations for those changes (it's like staging changes like git add)
-    3. run python manage.py migrate to apply those changes to the database (like running git commit)
+
+1. change models in models.py
+
+2. run python manage.py makemigrations to create migrations for those changes (it's like staging changes like git add)
+
+3. run python manage.py migrate to apply those changes to the database (like running git commit)
 
 <h2>Commands:</h2>
 
