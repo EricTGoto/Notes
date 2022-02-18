@@ -168,7 +168,13 @@ Since in this urls.py (URLconf) we are already at the polls/ level, the {% url %
 
 Namespace a URLconf by adding an app_name variable. Refer to the end of the django tutorial part 3.
 
-<h2>Shortcuts</h2>
+
+**Generic Views:**
+
+A frequent case of basic web development is getting data from a database according to a parameter passed in the URL, loading a template and then returning the template.
+This is very common so Django provides a shortcut. 
+
+<h2>Django functions</h2>
 
 **render:**
 
@@ -202,6 +208,9 @@ def index(request):
     return render(request, 'polls/index.html', context)
 ````
 **get_object_or_404:**
+
+takes a Django model as its first argument and an arbitrary number of keyword arguments which it passes to the get() function of the model's manager
+
 
 Instead of
 ````
