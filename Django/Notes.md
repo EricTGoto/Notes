@@ -117,6 +117,7 @@ The question_id=34 part comes from <int:question_id>. Using angle brackets "capt
 A view just wants the HttpResponse or an exception. The rest is up to the programmer.
 
 **Templates:**
+https://docs.djangoproject.com/en/4.0/topics/templates/
 We can separate the way a page looks from python by creating a template that the view can use.
 Tip: templates should be namespaced - templates should be put inside another directory named for the application itself polls/templates/polls/
 
@@ -125,7 +126,64 @@ render takes the request object as its first argument, a template name as its se
 
 Django templates use {% %} in the html. This is django specific.
 
+Remove hardcoded URLs in templates by using the {% url %} template tag.
+
+For example:
+
+````
+<li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+````
+
+Here, /polls/ is hardcoded. So instead of this we can:
+
+````
+<li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+````
+
+The {% url %} tag works by looking up the url definition as specified in the polls/urls module. It will look up the url in 'detail':
+
+````
+path('<int:question_id>/', views.detail, name='detail'),
+````
+
+Since in this urls.py (URLconf) we are already at the polls/ level, the {% url %} tag will return polls/.
+
+Namespace a URLconf by adding an app_name variable. Refer to the end of the django tutorial part 3.
+
 <h2>Shortcuts</h2>
+
+**render:**
+
+You can use render() to load a template, fill a context and return an HttpResponse object.
+
+````
+from django.http import HttpResponse
+from django.template import loader
+
+from .models import Question
+
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    template = loader.get_template('polls/index.html')
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
+````
+
+versus:
+
+````
+from django.shortcuts import render
+from .models import Question
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    context = {'latest_question_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
+````
+**get_object_or_404:**
 
 Instead of
 ````
@@ -147,6 +205,7 @@ def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 ````
+
 <h2>Models</h2>
 A model is the database layout. It contains the essnetial fiels and behaviors of the data you're storing.
 Models are represented as classes in models.py.
