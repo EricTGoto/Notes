@@ -116,12 +116,37 @@ The question_id=34 part comes from <int:question_id>. Using angle brackets "capt
 
 A view just wants the HttpResponse or an exception. The rest is up to the programmer.
 
+**Templates:**
 We can separate the way a page looks from python by creating a template that the view can use.
 Tip: templates should be namespaced - templates should be put inside another directory named for the application itself polls/templates/polls/
 
 It's very common to load a template, fill a context and return an HttpResponse so Django provides a shortcut with render(), which is from django.shortcuts
 render takes the request object as its first argument, a template name as its second and a dictionary as its optional third argument and returns an HttpResponse.
 
+Django templates use {% %} in the html. This is django specific.
+
+<h2>Shortcuts</h2>
+
+Instead of
+````
+def detail(request, question_id):
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, 'polls/detail.html', {'question': question})
+````
+
+You can use get_object_or_404:
+````
+from django.shortcuts import get_object_or_404, render
+
+from .models import Question
+# ...
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
+````
 <h2>Models</h2>
 A model is the database layout. It contains the essnetial fiels and behaviors of the data you're storing.
 Models are represented as classes in models.py.
