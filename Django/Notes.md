@@ -380,6 +380,14 @@ Models API reference: https://docs.djangoproject.com/en/4.0/topics/db/queries/
 
 Field lookups use double underscores. https://docs.djangoproject.com/en/4.0/topics/db/queries/#field-lookups-intro
 
+<h2>Automated Testing/TDD</h2>
+
+In a sophisticated or large application there will be many interactions between components and this will be hard or tedious to test manually. Having a set of tests that are gradually built up as you write your application will save you from having to perform manual testing for the ever growing complexity of the developing application. 
+
+In test driven development, tests are written before code. 
+
+We create tests in the tests.py file in the specific application. To run tests we type python manage.py test polls in the shell. The test polls function will look for test methods - anything that starts with test. Therefore, tests must begin with test.
+
 <h2>Settings</h2>
 Installed apps: holds the named of all django applications that are activated in the django instance.
 Default apps are:
@@ -406,3 +414,5 @@ from .models import Question
 admin.site.register(Question)
 
 Now admin users can make questions
+
+<h2>Query</h2>
