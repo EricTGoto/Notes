@@ -6,6 +6,9 @@
 
 **Models (database)**: datababase layout, with additional metadata
 
+**Context:** a dictionary with variable names as the key and their values as the value. Templates are passed contexts and use them to display data, etc.
+
+
 <h2>General</h2>
 
 To include an app in a project, add a reference to its configuration class in the installed_apps setting.
@@ -173,6 +176,83 @@ Namespace a URLconf by adding an app_name variable. Refer to the end of the djan
 
 A frequent case of basic web development is getting data from a database according to a parameter passed in the URL, loading a template and then returning the template.
 This is very common so Django provides a shortcut. 
+
+We make the following changes:
+
+From:
+````
+urlpatterns = [
+    # ex: /polls/
+    path('', views.index, name='index'),
+    # ex: /polls/5/
+    path('<int:question_id>/', views.detail, name='detail'),
+    # ex: /polls/5/results/
+    path('<int:question_id>/results/', views.results, name='results'),
+    # ex: /polls/5/vote/
+    path('<int:question_id>/vote/', views.vote, name='vote'),
+]
+
+views.py:
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    context = {'latest_question_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
+
+def detail(request, question_id):
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, 'polls/detail.html', {'question': question})
+
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
+````
+
+To:
+````
+urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
+    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
+    path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
+    path('<int:question_id>/vote/', views.vote, name='vote'),
+]
+
+views.py:
+class IndexView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Question.objects.order_by('-pub_date')[:5]
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
+
+
+def vote(request, question_id):
+    ... # same as above, no changes needed.
+
+````
+
+Each generic view needs to know what model it will be acting upon.
+
+The matched pattern im the URLconf is changed because the DetailView expects the primary key value captured from the URL to be called "pk".
+
+The template_name attribute in the Views tell Django to use a specific template name instead of the default which is <app name>/<model name>_detail.html for DetailView and <app name>/<model name>_list.html.
+
+In the non generic views, a context was passed to render, but with generic views, they are passed automatically. With DetailView, the **question** variable is provided automatically since we are using the Django model **Question**. For Listview, the automatically generated variable has _list appended to it so it is question_list, but since we made the context variable in the template latest_question_list, we can override the default by using the attribute **context_object_name**.
 
 <h2>Django functions</h2>
 
