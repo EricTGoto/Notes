@@ -416,3 +416,22 @@ admin.site.register(Question)
 Now admin users can make questions
 
 <h2>Query</h2>
+
+**Aggregation:**
+https://docs.djangoproject.com/en/4.0/topics/db/aggregation/
+
+personal note: used this (annotate) to implement the no choice question filter in the official django tutorial
+
+You can use aggregation to retrieve values that are derived by summarizing or aggregating a collection of objects.
+
+1st way to generate aggregates is to generate summary values over an entire QuerySet.
+
+i.e: Book.objects.all().aggregate(Avg('price')) will return the average of all values in the price field as a dictionary
+
+{'price__avg': 34.35}
+
+2nd way is to generate summary values is to generate an independent summary for each subject in a QuerySet.
+
+Per-object summaries can be generated using annotate(). When annotate() is used, each object in the QuerySet will be annotated with the specified values.
+
+Unlike aggregate(), the output of annotate() is a QuerySet so it can be followed with any other QuerySet operation such as filter(), order_by() and so on.
