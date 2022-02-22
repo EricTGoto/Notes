@@ -435,3 +435,9 @@ i.e: Book.objects.all().aggregate(Avg('price')) will return the average of all v
 Per-object summaries can be generated using annotate(). When annotate() is used, each object in the QuerySet will be annotated with the specified values.
 
 Unlike aggregate(), the output of annotate() is a QuerySet so it can be followed with any other QuerySet operation such as filter(), order_by() and so on.
+
+<h2>Static Files</h2>
+
+Django will look for static files in the static folder in the application directory. It is recommended to namespace the static folder: application_name/static/application_name
+
+Within the static files, use relative paths to link between them because the STATICFILES_FINDERS setting will take care of finding the files.
