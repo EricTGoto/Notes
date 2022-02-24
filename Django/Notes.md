@@ -8,10 +8,7 @@
 
 **Context:** a dictionary with variable names as the key and their values as the value. Templates are passed contexts and use them to display data, etc.
 
-
 <h2>General</h2>
-
-To include an app in a project, add a reference to its configuration class in the installed_apps setting.
 
 Default apps require the use of at least one database table so run python manage.py migrate before using them.
 
@@ -55,6 +52,13 @@ Simple three step guide to making model changes:
 2. run python manage.py makemigrations to create migrations for those changes (it's like staging changes like git add)
 
 3. run python manage.py migrate to apply those changes to the database (like running git commit)
+
+<h3>Quick startup/things to know when starting a project</h3>
+Initialize a project by using django-admin startproject [project name].
+
+Initialize an application by using python manage.py startapp [app name].
+
+To include an app in a project, add a reference to its configuration class in the installed_apps setting. This would be something like 'crypto_email.apps.CryptoEmailConfig'.
 
 <h2>Commands:</h2>
 
@@ -171,6 +175,15 @@ Since in this urls.py (URLconf) we are already at the polls/ level, the {% url %
 
 Namespace a URLconf by adding an app_name variable. Refer to the end of the django tutorial part 3.
 
+**Template Inheritance:**
+You can use template inheritance to create multiple pages with similar layouts. The idea is that there will be a base template that other pages will inherit from. The base template will have structure/data that you want the other pages to inherit. There will also be sections that you can reserve to create differences between the pages.
+
+Short summary of how to use this idea:
+
+1. Create a base template which contains all the structure/data that you want on all of the pages
+2. Wrap sections you want unique with {% block content %} {% endblock %}
+3. In the pages that inherit from the base, put {% extends "[project name]/[base file]" %} to create the inheritance
+4. Then add {% block content %} and {% endblock content %} and then sandwich the unique parts between them
 
 **Generic Views:**
 
