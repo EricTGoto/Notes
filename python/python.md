@@ -36,3 +36,18 @@ Default values of parameters:
 - the parameter c is optional and you can call something by only including parameters a and b
 - the default value of a parameter should not be set to a mutable data structure like a list or you will encounter problems as it will reuse the reference
 - instead use the constructor to initialize the variable (see example.py)
+
+Inheritance:
+
+- a class can inherit the traits of another class
+- the syntax for inheriting is to simply add the base class name in parentheses on the class declaration line
+``` 
+class Animal:
+    pass
+    
+class Dog(Animal):
+    pass
+```
+- a method with the same name in the derived class overrides the original method, this is called overriding
+- any trait in the base class can be accessed from the derived class with the function super()
+- private attributes/methods are inaccessible to clients which includes any subclasses. There is a convention to protect a trait from a client but make it accessible to subclasses by using a single underscore to make it a protected trait
