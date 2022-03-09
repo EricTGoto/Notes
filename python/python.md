@@ -51,3 +51,59 @@ class Dog(Animal):
 - a method with the same name in the derived class overrides the original method, this is called overriding
 - any trait in the base class can be accessed from the derived class with the function super()
 - private attributes/methods are inaccessible to clients which includes any subclasses. There is a convention to protect a trait from a client but make it accessible to subclasses by using a single underscore to make it a protected trait
+
+Operator Overloading
+
+- python includes special methods that allow classes to work with standard arithmetic and comparison operators
+- for example the operator >'s functionality can be defined with \__gt__
+```
+class Product:
+    def __init__(self, name: str, price: float):
+        self.__name = name
+        self.__price = price
+
+    def __str__(self):
+        return f"{self.__name} (price {self.__price})"
+
+    @property
+    def price(self):
+        return self.__price
+
+    def __gt__(self, another_product):
+        return self.price > another_product.price
+```
+
+```
+orange = Product("Orange", 2.90)
+apple = Product("Apple", 3.95)
+
+if orange > apple:
+    print("Orange is greater")
+else:
+    print("Apple is greater")
+```
+- other methods are lt, eq, ne, le.. etc
+
+- \__repr__ returns the technical representation of an object, often implemented so that it returns the code which can be executed to return an object with identical contents to the current object
+
+```
+class Person:
+    def __init__(self, name: str, age: int):
+        self.name = name
+        self.age = age
+        
+    def __repr__(self):
+        return f"Person({repr(self.name)}, {self.age})"
+```
+
+```
+person1 = Person("Anna", 25)
+person2 = Person("Peter", 99)
+print(person1)
+print(person2)
+```
+Output is:
+```
+Person('Anna', 25)
+Person('Peter', 99)
+```
