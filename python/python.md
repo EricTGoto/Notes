@@ -107,3 +107,9 @@ Output is:
 Person('Anna', 25)
 Person('Peter', 99)
 ```
+
+Iterators
+- it is possible to make your own classes iterable
+- to make a class iterable you must implement the iterator methods \__iter__ and \__next__
+- the iteration method usually just initializes an iteration variable
+- the next method returns the next item or returns a StopIteration event once all items have been traversed
