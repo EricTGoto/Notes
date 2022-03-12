@@ -11,3 +11,8 @@ def multiply_by_10(number : int):
 
 multiplied_by_10 = [multiply_by_10(number) for number in numbers]
 print(multiplied_by_10)
+
+# list comprehension with a condition
+
+even_items = [number for number in numbers if number % 2 == 0]
+print(even_items)

@@ -118,3 +118,5 @@ List Comprehensions
 
 - Syntax: [<expression> for <item> in <list>]
 - e.g. strings = [str(number) for number in numbers] where numbers is a list of numbers
+
+List comprehensions also allow for a condition: [<expression> for <item> in <list> if <boolean expression>]
