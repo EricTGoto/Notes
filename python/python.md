@@ -120,3 +120,47 @@ List Comprehensions
 - e.g. strings = [str(number) for number in numbers] where numbers is a list of numbers
 
 List comprehensions also allow for a condition: [<expression> for <item> in <list> if <boolean expression>]
+If you want an else in a comprehension, move the if to the front: [<expression 1> if <boolean expression> else <expression 2> for <item> in <list> ]
+
+Dictionary Comprehensions:
+{<key expression>: <value expression> for <item> in <series>}
+
+Custom Sorting:
+- by default, sorts will sort by natural order (ascending order)
+- if you want to change this, use the optional argument key, which is a function that is used for key comparison
+
+Regex:
+
+|: pipe character, acts as an or
+
+[ ]: square brackets, used to signify groups of accepted chracters
+
+e.g. [aeio] matches all strings which contain any of the characters a,e,i,o
+
+e.g. [0-6] matches all strings which contain a digit from 0 to 6
+
+[0-68a-d] matches all strings which contain a digit from 0 to 6 or an 8 or a letter from a-d
+
+two sets of brackets let you match two consecutive characters
+
+(): round brackets to group parts of expression
+
+-: dash, for ranges of characters
+
+.: match any single character
+
+^: character following must be at beginning of string
+
+$: character preceding must be at the end of string
+
+Repeated matches:
+a part of an expression can be repeated with the following operators (works on part of expression preceding operator):
+- * repeats for any number of times, including zero
+- + repeats for any number of times, but at least once
+- {m} repeats for exactly m times
+
+e.g. ba+b would match bab baaaaab, but not bb
+
+ba*b would match bab baaaab and bb
+ba{1}b would only match bab
+
