@@ -77,3 +77,36 @@ taco.capitalizeString(); // ERROR!!
 taco.printString(); // this prints "----TACO----"
 ```
 FactoryFunction returns a function printString which is accessible publically.  Because of function scope, the first two function calls fail. taco.capitalizeString returns an error also because of functional scoping. since capitalizeString is not accessible, it can be thought of as private. taco.printString() works as FactoryFunction is a function factory that creates and returns the printString() function, which is a closure that contains capitalizeString within its environment.
+
+<b>IIFE - Immediately Invoked Function Expression</b>
+
+Good article: http://adripofjavascript.com/blog/drips/an-introduction-to-iffes-immediately-invoked-function-expressions.html
+
+tldr: write a function, wrap in parentheses, and then immediately call by adding () to the end
+
+```
+(function () {
+    // logic
+})();
+```
+
+IIFEs exist because of function expressions (when a function is assigned to a variable or a property).
+
+e.g. 
+```
+var myFunction = function() { //logic };
+
+var myObj = {
+    myFunction: function() { //logic };
+};
+```
+
+A function created in the context of an expression is also a function expression:
+
+```
+(function () { /logic});
+```
+
+Since the above is a function, you can tack on () to the end and you will invoke it. Thus, IIFE.
+
+
