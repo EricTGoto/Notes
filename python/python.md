@@ -113,3 +113,10 @@ Iterators
 - to make a class iterable you must implement the iterator methods \__iter__ and \__next__
 - the iteration method usually just initializes an iteration variable
 - the next method returns the next item or returns a StopIteration event once all items have been traversed
+
+List Comprehensions
+
+- Syntax: [<expression> for <item> in <list>]
+- e.g. strings = [str(number) for number in numbers] where numbers is a list of numbers
+
+List comprehensions also allow for a condition: [<expression> for <item> in <list> if <boolean expression>]
