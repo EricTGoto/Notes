@@ -1,3 +1,3 @@
-# JS-Notes
+# Notes
 
-This is a repository for my Javascript notes.
+All my notes in one repository instead of all over the place.
