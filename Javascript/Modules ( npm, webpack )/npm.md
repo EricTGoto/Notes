@@ -13,3 +13,6 @@ npm install <package_name>
     - lists packages your project depends on
     - specifies versions of a package that your project can use
 - npm install --save-dev saves the dependency as a development dependancy
+
+When the above command is ran, npm will automatically add lines to the dev dependencies section in the package.json:
+<img src='./images/dev_dependencies.jpg'>
