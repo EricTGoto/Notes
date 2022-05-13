@@ -37,3 +37,15 @@ now import './style.css' works in a javascript file
 Other loaders:
 
 <img src='./images/webpack-config.jpg'>
+
+There are also plugins that manage and generate index.html for you.
+refer to: https://webpack.js.org/guides/output-management/
+
+Source maps:
+
+When webpack bundles your source code, it can become difficult to track errors to their original location. We can use a source map to solve this problem. The source map will tell us which file the error/warning is coming from.
+
+When you are tired of typing npm run build to compile code:
+- watch mode
+- webpack dev server
+- webpack dev middleware
