@@ -30,6 +30,20 @@ heroku xxx
     - can also use the dashboard to set config variables
     - access environment variables with the standard way in language you are using
         - in node.js: process.env.SECRET_NAME
+
+<b>Heroku Initial Deployment</b>
+
+- initiate a git repository
+    - git init
+- log in to heroku
+    - heroku login
+- add remote repository 'heroku'
+    - heroku git:remote -a xxxxx
+    - git 
+- push to the heroku repository
+    - git push heroku main
+- deployment complete, open with heroku open
+
 <b>Heroku deployment pattern</b>
 
 - test locally with heroku local
