@@ -1,6 +1,6 @@
 # Notes for Code Complete
 
-<h2>Part 1
+<h2>Part 1</h2>
 <h3>Ch 1: Welcome to Software Construction</h3>
 
 - Very generally, three aspects to software development:
@@ -164,3 +164,31 @@ other checklist items on page 42.
 summary: 
 - architecture should describe the motivations for all major decisions, rationales for including/excluding any alternatives should be explained
 - if good architectural design hasn't been done, you might be solving the right problem the wrong way during construction
+
+<h3>Ch 4: Key Construction Decisions</h3>
+
+<b>Choosing a programming language</b>
+
+- programmers are more productive using a familiar high-level language such as Java, Python, C#
+
+<b>Program <i>into</i> a language</b>
+
+- programmers who program "into" a language first decide what thoughts they want to express, and then they determine how to express those thoughts using the tools provided by their specific language
+- try to compensate for missing aspects of your programming language by using your own coding conventions, standards, libraries, etc
+    - essentially, work around problems created by a programming language
+
+<b>Selection of Major Construction Practices</b>
+
+- there are many practices that can be used, it is good to decide which ones are to be used and which ones are to be excluded
+    - coding conventions for names, comments, layout
+    - handling errors, security, OOB
+    - process to check in code
+    - pair programming? individual?
+    - when to write tests? before, during, after?
+    - integration tests?
+    - peer review of code?
+    - version control?
+    - language, language version?
+    - framework?
+    - misc tools like: refactoring tool, test framework, syntax checker
+
