@@ -192,3 +192,34 @@ summary:
     - framework?
     - misc tools like: refactoring tool, test framework, syntax checker
 
+<h2>Part 2: Creating High-Quality Code</h2>
+
+<h3>Ch 5: Design in Construction</h3>
+
+<b>Design Challenges</b>
+
+- "software design" links requirements to coding and debugging, it is turning specifications into operational software
+- design is sloppy because many mistakes will be made and will be iteratively (ideally) corrected. a good solution is often only subtly different from a poor one.
+- design involves tradeoffs, restrictions and priorities
+
+<b>Key Design Concepts</b>
+
+- managing complexity is very important really the only point where a project can fail from a technical POV
+- manage complexity by:
+    1. minimizing the amount of essential complexity that anyone's brain has to deal with at any one time
+        - organize code so that there is a minimum number of parts to think about at a time
+    2. keep accidental complexity from growing
+- high quality design has several general characteristics
+    1. minimal complexity
+    2. ease of maintenance
+    3. loose coupling
+    4. extensibility
+    5. reusability
+    6. high fan-in
+    7. low-to-medium fan-out
+    8. portability
+    9. standard techniques
+<h3>Ch 6: Working Classes</h3>
+<h3>Ch 7: High-Quality Routines</h3>
+<h3>Ch 8: Defensive Programming</h3>
+<h3>Ch 9: Psuedocode Programming Process</h3>
