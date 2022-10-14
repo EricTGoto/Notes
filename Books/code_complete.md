@@ -211,14 +211,144 @@ summary:
     2. keep accidental complexity from growing
 - high quality design has several general characteristics
     1. minimal complexity
+        - avoid making "clever" designs as they are usually hard to understand
+        - simple and easy to understand are much better
     2. ease of maintenance
     3. loose coupling
+        - minimize connections between different parts of programs
+        - makes it easier to test and maintain
+        - use principles of good abstractions in class interfaces, encapsulation and information hiding
     4. extensibility
+        - make it easier to enhance code
     5. reusability
+        - designing code such that it can be easily reused elsewhere
     6. high fan-in
+        - having a high number of classes that use a given class
+        - implies that a system has been designed to make good use of utility classes
     7. low-to-medium fan-out
+        - means having a given class use a low-to-medium number of other classes (<7)
+        - high fan-out may mean that the class is overly complex
     8. portability
-    9. standard techniques
+        - designing the system so that you can easily move it to another environment
+        - e.g docker
+    9. leanness
+        - when code is modified usually extra code has to be developed, reviewed, tested and considered - future versions of the software should remain backward compatible with this extra code
+    10. stratification
+        - writing code such that viewing the system at any single level gets a consistent view
+    11. standard techniques
+        - make codebase standardized by strictly applying style rules, etc
+
+<b>Levels of Design</b>
+
+Level 1: Software System
+- entire system
+
+Level 2: Division into Subsystems or Packages
+
+- the main design aspect at this level is the identification of all major subsystems
+    - e.g. database, user interface, business rules, command interpreter, report enginem, etc
+- major design activity is on how to partition the program into major subsystems and defining rules for how they can communicate
+    - important to restrict communications, otherwise you lose benefit of separating them in the first place
+    - if the rules are loose or don't exist then some important questions are raised:
+        - how many parts of a system would a developer need to understand to change a small section of code?
+        - what happens when business rules are used in another system?
+        - what happens when a new UI is added?
+        - what happens when you put data storage on a remote machine?
+    - a program shouldn't contain any circular relationships
+
+Level 3: Division into Classes
+
+- design at this level includes identifying all classes in the system
+- major design activity is to make sure all subsystems have been decomposed to a level of detail fine enough that you can implement their parts as individual classes
+
+Level 4: Division into Routines
+- dividing each class into routines
+
+Level 5: Internal Routine design
+- laying out the functionality of individual routines
+    - consists of writing pseudocode, looking up algorithms, how to organize the code, writing the code
+- this level is always done
+
+
+<h3>Heuristics- some design guides</h3>
+
+<b>Designing with objects</b>
+
+- identifying the objects and their attributes (methods and data)
+- determine what can be done to each object
+- determine what each object is allowed to do to other objects
+- determine the parts of each object that will be visible to other objects
+- define each object's interfaces
+
+<b>Form Consistent Abstractions</b>
+
+- the main benefit of abstraction is that it allows you to ignore irrelevant details
+- a good class interface is an abstraction that allows you to focus on the interface without needing to worry about the internals of the class
+
+<b>Encapsulate Implemenation Details</b>
+
+- encapsulation manages complexity by forbidding you to look at the complexity
+- you can look at a house from a distance, but not get close enough to know what the door is made of
+
+<b>Inherit - When Inheritance Simplifies the Design</b>
+
+- inheritance is a powerful tool and can provide great benefits when done well, but can make things very confusing when done poorly
+
+<b>Information hiding</b>
+
+- hiding complexity so that your brain doesn't have to deal with it unless there is a direct concern
+- hiding sources of change so that when change occurs, the effects are localized
+- asking "what does this class need to hide" supports good design decisions at all levels
+
+<b>Identify Areas Likely to Change</b>
+
+- identify items that seem likely to change
+- separate items that are likely to change
+    - compartmentalize potentially volatile components into its own class
+- isolate items that seem likely to change
+    - design the interface so that changes are limited to the inside and other classes would be unaware that change occurred
+
+Areas likely to change:
+- business rules
+- hardware dependencies
+- input/output
+- nonstandard language features
+- status variables
+- data-size constraints
+    - instead of declaring an array of size 100 directly, use a named constant like MAX_SIZE
+
+<b>Keep Coupling Loose</b>
+
+- good coupling between modules is loose enough that one module can easily be used by other modules
+- make it easy for other modules to call a module, loose coupling makes things flexible and maintanable
+
+Types of Coupling:
+- data-parameter coupling: data passed between modules are primitive data types - normal and acceptable
+- simple object coupling: a module is simple object coupled if it instantiates another object - this is acceptable
+- object-parameter coupling: two modules are object-parameter coupled when Object1 required Object2 to pass Object3
+- Semantic coupling: when one module makes use of some semantic knowledge of another module's inner workings - worst, avoid
+
+Classes and routines are tools to reduce complexity, if they aren't then they aren't doing their jobs!
+
+<b>Look for Common Design Patterns</b>
+
+- adapter, bridge, decorator, facade, factory, observor, singleton, template, etc
+
+- patterns reduce complexity by introducing well known abstractions
+- patterns reduce errors by introducing standardized ways to solving common problems
+- a designer who is familiar with common patterns can easily think of alternative patterns that may fit better
+- patterns streamline communications if participants know of them
+
+<h3>Design Practices</h3>
+
+- iterate
+    - a first design may seem good, but a second attempt is nearly always better than the first
+- divide and conquer
+    - divide program into different areas and tackle individually
+- top down/bottom up
+
+	
+
 <h3>Ch 6: Working Classes</h3>
 <h3>Ch 7: High-Quality Routines</h3>
 <h3>Ch 8: Defensive Programming</h3>
