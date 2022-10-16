@@ -420,6 +420,44 @@ When to use inheritance and when to use containment:
 - if multiple classes share common data and behavior, inherit from a common base class that defines the common data and routines
 - inherit when you want the base class to control your interface, contain when you want to control your interface
 
+<b>Member Functions and Data</b>
+
+- minimize the extent to which a class collaborated with other classes
+
+<b>Constructors</b>
+
+- initialize all member data in all constructors, if possible
+- deep copies over shallow copies
+
+<b>Reasons to Create a class</b>
+
+- model real world objects
+- model abstract objects
+- reduce complexity - the most important reason
+    - create a class to hide information so you don't need to think about it
+    - will need to think about it while writing the class, but a well written class will be very easy to use without any knowledge of its internal workings
+- reduce code size, improve maintainability
+- isolate complexity
+    - if an error occurs, it will be easy to find the error because it is localized to a class
+- hide implementaiton details
+- limit effects of changes
+    - isolate areas that are likely to change so that the effects of changes are limited to the scope of a single class or a few classes
+- hide global data
+    - can hide global data behind a class interface
+- central point of control
+- facilitate reusable code
+- package related operations
+
+<b>Classes to Avoid</b>
+
+- classes that only contain data or only contain behavior
+
+<b>Summary</b>
+
+- class interface should hide something - abstraction/encapsulation
+- containment is preferable to inheritance
+    - inheritance adds complexity
+- classes are a good tool to manage complexity
 <h3>Ch 7: High-Quality Routines</h3>
 <h3>Ch 8: Defensive Programming</h3>
 <h3>Ch 9: Psuedocode Programming Process</h3>
