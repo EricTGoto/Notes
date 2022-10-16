@@ -347,9 +347,79 @@ Classes and routines are tools to reduce complexity, if they aren't then they ar
     - divide program into different areas and tackle individually
 - top down/bottom up
 
-	
-
 <h3>Ch 6: Working Classes</h3>
+
+<b>Abstract Data Types (ADT)</b>
+
+- ADT is a collection of data and operations that work on that data
+- if you don't have ADTs, you'll most likely have an ad-hoc aproach which can get very hard to organize and maintain
+- benefits of using ADTs:
+    - hide implementation details, in particular, information about a particular data type is all located in one place
+    - changes don't affect the whole program
+        - changes will be localized to the ADT
+    - interface can be more informative
+        - seeing the similar operations in a single place will allow you to reason and understand the code more
+    - easier to improve performance
+        - because of organization
+    - program becomes more self documenting
+        - can have easy to understand method names
+    - data doesn't have to be passed around
+        - ADT will contain necessary attributes and methods to read and write ADT's data
+    - lets you abstract
+
+<b> Good Class Interfaces </b>
+
+- a class's interface should offer a group of methos that clearly belong together
+- each class should implement one and only one ADT
+    - if a class is implementing more than one, then reorganize the class into one more more well-defined ADTs
+- provide services in pairs with their opposites
+    - most operations have corresponding, equal and opposite operations
+- move unrelated information to another class
+- don't add public members that are inconsistent with the interface abstration
+- Good encapsulation
+    - minimize accessibility of classes and members
+    - don't expose class attributes in public
+        - getters/setters preferred
+    - avoid putting private implementation details into a class's interface
+        - may not be a problem in python?
+    - don't assume how the interface will or won't be used
+    - favor read-time convenience to write-time convenience
+    - be wary of semantic violations of encapsulation
+        - i.e. don't skip calls to certain methods because you know they are called automatically in other methods
+            - e.g. not calling database.Connect() because you know employee.Retrieve() will connect to the DB if there isn't already a connection
+        - semantic violations will break encapsulation as you are aware of the internal implementation and thus are not working with the interface, but through it
+
+<b>Design and Implementation Issues</b>
+
+- Containment
+    - idea that a class contains a primitive data element or object
+    - think of it as a "has a" relationship
+        - an employee "has a" name, "has a" phone number, etc -> make name and phone attributes of the Employee class
+- Inheritance
+    - idea that one class is a specialization of another class
+    - think of it as a "is a" relationship
+    - helps to avoid the need to repeat code and data in multiple locations by having a base class
+    - design and document for inheritance or prohibit it
+    - all methods defined in the base class should mean the same thing when used in the derived classes
+    - move common interfaces, data and behavior as high as possible in the inheritance tree
+    - be suspicious of classes that override a method and do nothing inside the derived method
+        - typically indicates an error in the design of the base class
+            - e.g. class Cat with method Scratch(), but what about a Declawed cat? May be tmepted to make class ScratchlessCat(Cat) which overrides Scratch() with nothing. Correct approach would be a Claws class in Cat.
+    - avoid deep inheritance trees
+        - 2/3
+    - make all attributes private
+        - if derived class really needs access, use protected accessor functions
+    - multiple inheritance is generally bad
+
+Underlying message is that inheritance tends to work against managing complexity.
+
+When to use inheritance and when to use containment:
+
+- if multiple classes share common data but not behavior, create a common object that those classes can contain
+- if multiple classes share common behavior but not data, derive them from a base class that defines the common routines
+- if multiple classes share common data and behavior, inherit from a common base class that defines the common data and routines
+- inherit when you want the base class to control your interface, contain when you want to control your interface
+
 <h3>Ch 7: High-Quality Routines</h3>
 <h3>Ch 8: Defensive Programming</h3>
 <h3>Ch 9: Psuedocode Programming Process</h3>
