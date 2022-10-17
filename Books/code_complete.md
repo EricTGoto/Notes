@@ -458,6 +458,65 @@ When to use inheritance and when to use containment:
 - containment is preferable to inheritance
     - inheritance adds complexity
 - classes are a good tool to manage complexity
+
 <h3>Ch 7: High-Quality Routines</h3>
+
+Example of a low quality routine:
+```
+void HandleStuff( CORP_DATA & inputRec, int crntQtr, EMP_DATA empRec,
+double & estimRevenue, double ytdRevenue, int screenX, int screenY,
+COLOR_TYPE & newColor, COLOR_TYPE & prevColor, StatusType & status,
+int expenseType )
+{
+int i;
+for ( i = 0; i < 100; i++ ) {
+inputRec.revenue[i] = 0;
+inputRec.expense[i] = corpExpense[ crntQtr ][ i ];
+}
+UpdateCorpDatabase( empRec );
+estimRevenue = ytdRevenue * 4.0 / (double) crntQtr;
+newColor = prevColor;
+status = SUCCESS;
+if ( expenseType == 1 ) {
+for ( i = 0; i < 12; i++ )
+profit[i] = revenue[i] - expense.type1[i];
+}
+else if ( expenseType == 2 ) {
+profit[i] = revenue[i] - expense.type2[i];
+}
+else if ( expenseType == 3 )
+profit[i] = revenue[i] - expense.type3[i];
+}
+```
+my thoughts:
+- too many parameters to the function
+- parameters are not named very well
+- function name is poor and doesn't describe what it does
+- arbitrary number 100 in the for loop. what does it mean?
+- doesn't have a cohesive flow, many different things are happening in the function
+- divide by 0 may be possible
+- modifying input variables not a good practice
+
+textbook:
+- routine isn't documented
+- routine has a bad layour and inconsistent styles
+- writes/reads to global variables (profit, corpExpense)
+- doesn't have a single purpose
+- uses magic numbers like 100, 4.0, 12, 2, 3
+- some parameter's are unused
+- parameters are poorly ordered and not documented
+
+<b>Valid Reasons to Create a Routine</b>
+
+- reduce complexity
+- introduce an understandable abstraction
+    - really another way to reduce complexity
+- avoid duplicate code
+- hide sequences
+    - as in order in which events happen
+- improve portability
+- easier to improve performance of code
+    - code is in one location so easier to read through and think about
+
 <h3>Ch 8: Defensive Programming</h3>
 <h3>Ch 9: Psuedocode Programming Process</h3>
