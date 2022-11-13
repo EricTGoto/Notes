@@ -518,5 +518,381 @@ textbook:
 - easier to improve performance of code
     - code is in one location so easier to read through and think about
 
-<h3>Ch 8: Defensive Programming</h3>
-<h3>Ch 9: Psuedocode Programming Process</h3>
+<b>Operations that seem too simple to put into Routines</b>
+
+- making a function for a few lines of code may seem like overkill, but will improve readability
+
+- high quality design has several general characteristics
+    1. minimal complexity
+        - avoid making "clever" designs as they are usually hard to understand
+        - simple and easy to understand are much better
+    2. ease of maintenance
+    3. loose coupling
+        - minimize connections between different parts of programs
+        - makes it easier to test and maintain
+        - use principles of good abstractions in class interfaces, encapsulation and information hiding
+    4. extensibility
+        - make it easier to enhance code
+    5. reusability
+        - designing code such that it can be easily reused elsewhere
+    6. high fan-in
+        - having a high number of classes that use a given class
+        - implies that a system has been designed to make good use of utility classes
+    7. low-to-medium fan-out
+        - means having a given class use a low-to-medium number of other classes (<7)
+        - high fan-out may mean that the class is overly complex
+    8. portability
+        - designing the system so that you can easily move it to another environment
+        - e.g docker
+    9. leanness
+        - when code is modified usually extra code has to be developed, reviewed, tested and considered - future versions of the software should remain backward compatible with this extra code
+    10. stratification
+        - writing code such that viewing the system at any single level gets a consistent view
+    11. standard techniques
+        - make codebase standardized by strictly applying style rules, etc
+
+<b>Levels of Design</b>
+
+Level 1: Software System
+- entire system
+
+Level 2: Division into Subsystems or Packages
+
+- the main design aspect at this level is the identification of all major subsystems
+    - e.g. database, user interface, business rules, command interpreter, report enginem, etc
+- major design activity is on how to partition the program into major subsystems and defining rules for how they can communicate
+    - important to restrict communications, otherwise you lose benefit of separating them in the first place
+    - if the rules are loose or don't exist then some important questions are raised:
+        - how many parts of a system would a developer need to understand to change a small section of code?
+        - what happens when business rules are used in another system?
+        - what happens when a new UI is added?
+        - what happens when you put data storage on a remote machine?
+    - a program shouldn't contain any circular relationships
+
+Level 3: Division into Classes
+
+- design at this level includes identifying all classes in the system
+- major design activity is to make sure all subsystems have been decomposed to a level of detail fine enough that you can implement their parts as individual classes
+
+Level 4: Division into Routines
+- dividing each class into routines
+
+Level 5: Internal Routine design
+- laying out the functionality of individual routines
+    - consists of writing pseudocode, looking up algorithms, how to organize the code, writing the code
+- this level is always done
+
+
+<h3>Heuristics- some design guides</h3>
+
+<b>Designing with objects</b>
+
+- identifying the objects and their attributes (methods and data)
+- determine what can be done to each object
+- determine what each object is allowed to do to other objects
+- determine the parts of each object that will be visible to other objects
+- define each object's interfaces
+
+<b>Form Consistent Abstractions</b>
+
+- the main benefit of abstraction is that it allows you to ignore irrelevant details
+- a good class interface is an abstraction that allows you to focus on the interface without needing to worry about the internals of the class
+
+<b>Encapsulate Implemenation Details</b>
+
+- encapsulation manages complexity by forbidding you to look at the complexity
+- you can look at a house from a distance, but not get close enough to know what the door is made of
+
+<b>Inherit - When Inheritance Simplifies the Design</b>
+
+- inheritance is a powerful tool and can provide great benefits when done well, but can make things very confusing when done poorly
+
+<b>Information hiding</b>
+
+- hiding complexity so that your brain doesn't have to deal with it unless there is a direct concern
+- hiding sources of change so that when change occurs, the effects are localized
+- asking "what does this class need to hide" supports good design decisions at all levels
+
+<b>Identify Areas Likely to Change</b>
+
+- identify items that seem likely to change
+- separate items that are likely to change
+    - compartmentalize potentially volatile components into its own class
+- isolate items that seem likely to change
+    - design the interface so that changes are limited to the inside and other classes would be unaware that change occurred
+
+Areas likely to change:
+- business rules
+- hardware dependencies
+- input/output
+- nonstandard language features
+- status variables
+- data-size constraints
+    - instead of declaring an array of size 100 directly, use a named constant like MAX_SIZE
+
+<b>Keep Coupling Loose</b>
+
+- good coupling between modules is loose enough that one module can easily be used by other modules
+- make it easy for other modules to call a module, loose coupling makes things flexible and maintanable
+
+Types of Coupling:
+- data-parameter coupling: data passed between modules are primitive data types - normal and acceptable
+- simple object coupling: a module is simple object coupled if it instantiates another object - this is acceptable
+- object-parameter coupling: two modules are object-parameter coupled when Object1 required Object2 to pass Object3
+- Semantic coupling: when one module makes use of some semantic knowledge of another module's inner workings - worst, avoid
+
+Classes and routines are tools to reduce complexity, if they aren't then they aren't doing their jobs!
+
+<b>Look for Common Design Patterns</b>
+
+- adapter, bridge, decorator, facade, factory, observor, singleton, template, etc
+
+- patterns reduce complexity by introducing well known abstractions
+- patterns reduce errors by introducing standardized ways to solving common problems
+- a designer who is familiar with common patterns can easily think of alternative patterns that may fit better
+- patterns streamline communications if participants know of them
+
+<h3>Design Practices</h3>
+
+- iterate
+    - a first design may seem good, but a second attempt is nearly always better than the first
+- divide and conquer
+    - divide program into different areas and tackle individually
+- top down/bottom up
+
+
+<h2>Chapter 8: Defensive Programming:</h2>
+
+- enable code to protect itself when input data is bad
+- garbage in, error message out
+- defensive programming techniques make errors easier to find, easier to fix and less damaging to production code
+
+<b>Assertions</b>
+
+- code used during development that allows a program to check itself as it runs
+    - assertion is true -> program running as expected
+- use assertions to flush out unexpected conditions
+    - e.g. check:
+        - input parameters within expected range
+        - file/stream is open/closed
+        - pointer is non null
+
+Guidelines for using Assertions:
+
+- use error-handling code for conditions you expect to occur, assertions for conditions that should never occur
+- don't put executable code in an assertion, check a response from the executable code instead
+- for highly robust code, assert and then handle the error anyway
+
+<b>Error Handling Techniques</b>
+
+- handle errors that you expect to occur
+
+Some possible techniques: 
+- return a neutral value: simply return a value that is known to be harmless
+- wait until valid data: for example if taking readings 100 times a second, just wait for the next reading to come in
+- return same answer as the previous time
+- substitute with closest legal value: e.g. if a thermometer only reads between 0 and 100, return 0 if a temperature reading is below 0
+- log a warning
+- return an error code: let a different function handle the error (something higher in the call stack)
+- call an error-processing routine/object
+    - not the best approach as the program will be coupled to this global object
+- display an error message
+    - be wary of how much info you reveal in the error message as attackers can discover how to attack a system with too much info
+    - can also spread error message interface code all over system which is not good
+- shut down: used in safety critical applicaitons
+
+Styles of error processing:
+
+correctness: never returning an inaccurate result
+
+robustness: always doing something that will allow software to keep operating
+
+<b>Exceptions</b>
+
+- means which code can pass along errors or exceptional events to the code that called it
+- return exception object to calling function with more context in a try catch block
+- use exceptions to notify other parts of the program about errors that should not be ignored
+- if error condition can be handled locally, handle it locally
+- throw exceptions at the right level of abstraction
+    - may involve wrapping common exceptions with names that make sense
+- avoid empty catch blocks
+- good to know what exceptions that the language you are working in can throw so you can catch them
+
+<b>Barricades</b>
+
+- barricades are a way to separate code into parts where data is safe and vice versa
+- if data is in a dangerous area, perform validation and sanitization, if not then assume it is safe and use it
+- can also have classes that transition data from dangerous to clean
+    - "validation" classes
+    - example: public methods assume data is unsafe and do checks on data, private methods take the checked data and assume it is safe
+- can think of this as a "clean room" technique
+- deciding which code is inside and which it outside the barricade is an architecture-level decision
+
+<b>Determining how much defensive programming to leave in production code</b>
+
+- leave code that checks for important errors
+- remove code that checks for trivial errors
+- remove code taht results in hard crashes
+    - want errors to be unobtrusive in production
+- log errors for support personnel
+    - error logging may need to be modified a little for production
+
+<h2>The Pseudocode Programming Process</h2>
+
+<b>Summary of steps in building classes and routines</b>
+
+- both are an interative process
+
+Classes:
+- create general design for class
+    - defining class's specific responsibilities
+    - define what "secrets" the class will hide
+    - define what abstraction the class interface will capture
+    - etc
+- construct routines
+    - design routine, check design, code, review and test
+
+<b>Psuedocode tips</b>
+
+- use English like statements that precisely describe specific operations
+- write pseudocode at a low enough level that generating code form it will be easy
+- iterate!
+
+<h1>Part 3: Variables</h1>
+
+<h2>Chapter 10: General Issues in Using Variables</h2>
+
+<b>Guidelines for initializing variables</b>
+
+- initialize each variables as it's declared
+- ideally, decalre and define each variable close to where it's first used
+- use final or const when possible
+- initialize a class's member data in its constructor
+- check need for reinitialization
+
+<b>Variable Scope Guidelines</b>
+
+Maximizing scope will bring in unnecessary complexity as you would need to reason about which variables are being used in your routine.
+Thus, keep variable scope small.
+- keep variable "live" time as short as possible
+    - instead of declaring a variable all the way at the top of a function, declare it right before it will be used
+- group related statements
+- break groups of related statements into separate routines
+- begin with most restricted scope and expand if necessary
+
+<b>Binding time</b>
+
+- binding time is the time at which the variable and its vlaue are bound together
+- several forms of binding time:
+    - coding time (hard coded)
+    - compile time (named constants)
+    - load time (reading value from external file)
+    - object instantiation time (reading value each time a window is created)
+    - just in time (reading value each time window is drawn)
+- the earlier the binding time, the lower the flexibility and the lower the complexity
+
+<b>Use each variable for exactly one purpose</b>
+
+- use each variable for one purpose only
+    - most common way to break this rule is to use a variable named temp for multiple things
+- avoid variables with hidden meanings
+    - e.g. pageCount represents number of pages printed unless it equals -1, then it indicates an error
+- make sure all declared variables are used
+    - modern development environments will automatically inform of this so not much of a worry
+
+<h2>Chapter 11: The Power of Variable Names</h2>
+
+most important naming consideration:
+- name fully and accurately describes the entity the variable represents
+
+computed value qualifiers in variable names:
+- e.g. total, sum, average
+- try to put the qualifier in a consistent location
+- e.g. countAverage, countMax, countMin instead of averageCount, countMax, minCount
+
+<b>The power of naming conventions</b>
+
+conventions offer several benefits
+- let you take more for granted.
+    - can make overarching assumptions so you can concentrate on more important characteristics of the code
+- knowledge transfer is easier.
+    - similarities in names give you an easier and more confident understanding of waht unfamiliar variables are supposed to do
+- help you learn code more quickly on a new project
+- reduce name proliferation
+
+summary:
+- good variable names are a key element of program readability
+- names should be as specific as possible
+
+<h2>Chapter 12: Fundamental Data Types</h2>
+
+<b>Numbers</b>
+
+- avoid magic numbers, aka literal numbers in code without any explanation
+    - changes can be made more reliably and easily without magic numbers
+    - 0 and 1 are an exception as they are used for initialization and increment
+- anticipate divide by zero errors
+- avoid mixed-type comparisons
+
+<b>Floating point Numbers</b>
+
+- avoid equality comparisons
+- avoid additions and subtractions on numbers that have greatly different magnitudes
+    - may be hard to represent large ranges with 32bit/64bit
+- anticipate rounding errors
+    - for example keeping track of money, we can use integers instead and multiply everything by 100.
+
+<b>Characters and Strings</b>
+
+- avoid magic characters and strings
+    - easier to use a string resource file, helpful if needing to broaden scope to international markets
+- know how your language and environment support Unicode
+- decide on an internationalization/localization strategy early in the lifetime of a program
+    - key consideration is storing all strings in an external resource and whether to create separate builds for each language or to determine specific language at run time
+- support multiple languages -> use unicode
+
+<b>Boolean Variables</b>
+
+- use boolean variables directly in conditions, instead of testing the boolean
+    - e.g. if (isFinished) instead of if (isFinished === true)
+
+<b>Enumerated Types</b>
+
+- an enumerated type is a type of data for which the value is restricted to a fixed set of values known at compile time. the values are described in English.
+- use enumerated types for readability
+
+<b>Named Constants</b>
+
+- a named constant is a variable that you declare and refer to as a fixed value
+- allows you to keep values in one spot and only have to change in one spot instead of having to change in multiple spots (i.e. using magic numbers)
+    - single point of control
+
+<h2>Unusual Data Types</h2>
+
+<b>Pointers</b>
+
+- pointers consists of two parts: a location in memory and a knowledge of how to interpret the contents of that location
+    - location: memory address usually in hexadecimal notation
+    - interpretation: provided by base type of pointer
+- pointer error is usually the result of a pointer pointing somewhere it shouldn't be
+- check pointers before using them
+- delete pointers in linked lists in the right order
+- set pointers to null after deleting/freeing them
+
+<b>Global Data</b>
+
+Common problems
+- hard to keep track of changes
+- code reuse can be hindered
+    - if a class reads or writes to global data, then using that class in a different program would require creating that global data as well, unless you refactor it
+
+use global data only as a last resort
+- begin by making each variable local and increase scope as necessary
+- use access routines
+    - require access to global data through routines
+- keep all access to the data at the same level of abstraction
+
+reducing risks of using global data
+- naming convention that makes global variables obvious
+- well-annotated list of all global variables
+- don't use global data to hold intermediate variables 
