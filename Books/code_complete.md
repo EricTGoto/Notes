@@ -867,7 +867,7 @@ summary:
 - allows you to keep values in one spot and only have to change in one spot instead of having to change in multiple spots (i.e. using magic numbers)
     - single point of control
 
-<h2>Unusual Data Types</h2>
+<h2>Chapter 13: Unusual Data Types</h2>
 
 <b>Pointers</b>
 
@@ -896,3 +896,120 @@ reducing risks of using global data
 - naming convention that makes global variables obvious
 - well-annotated list of all global variables
 - don't use global data to hold intermediate variables 
+
+<h2>Part 3: Statements</h2>
+
+<h2>Chapter 14: Organizing Straight-Line Code</h2>
+
+<b>Statements that must be in a specific order</b>
+
+- often times there are statements that must be written in a specific order
+- care should be taken to allow the code to be easily read and understood
+- tips:
+    - organize code so that dependencies are obvious
+        - i.e. easily let reader know that line 2 depends on line 1
+    - name routines so that dependencies are obvious
+    - use routine parameters to make dependencies obvious
+    - document unclear dependencies with comments
+
+<b>Statements whose order doesn't matter</b>
+
+- keep related actions together
+- reduce live time of objects/variables
+
+<h2>Chapter 15: Using Conditionals</h2>
+
+<b>if statements</b>
+
+- write the normal path so that it is clear and then write the edge cases
+- make sure to branch correctly on equality (>= or <=)
+- put normal case after the if rather than after the else
+- don't use empty ifs (no statements after in the if block)
+- consider the else clause
+    - sometimes may think you only need the if, but else may be needed as well
+- test all cases
+- check that the statements are in the right block (if or else)
+
+<b>if-else statements</b>
+
+- simplify complicated tests with boolean function calls
+    - wrap similar conditional tests in functions to improve readability
+- put the most common cases first
+    - minimizes amount of reading needed to find the usual cases
+    - minimizes comparisons the code does to find the usual cases
+- make sure all cases are covered
+    - i.e. a final else clause to catch cases that you didn't plan
+- replace if-then-else chains with cases as they are easier to code and read
+
+<b>case statements</b>
+
+- put normal case first and then exceptions OR
+- order cases by frequency, if cases are equally frequent, order alphabetically
+- keep action of each case simple
+    - use function if necessary
+- don't make up a variable to use the case statement, case statement should be used for simple data that is easily categorized
+    - if data isn't simple use if-else
+- use default clause only to detect legitimate defaults OR errors
+
+<h2>Chapter 16: Controlling Loops</h2>
+
+loop differentiation:
+- flexibility: how many times a loop executes
+- test location: beginning, middle or end of loop
+    - tells you whether or not the loop runs at least once
+
+<b>controlling the loop</b>
+
+- loop entering:
+    - enter loop from one location only
+    - put initialization code directly before the loop
+- loop contents:
+    - keep loop house keeping statements at beginning or end of the loop
+        - e.g. i++
+    - each loop perform only one functino
+- exiting the loop
+    - assure yourself that the loop ends
+    - make loop termination conditions obvious
+    - avoid code that depends on the loop index's final value
+    - be wary of using too many breaks in a loop
+        - can indicate unclear thinking about structure of the loop
+    - use break and continue only with caution
+        - using break forces person reading code to look inside the loop to understand loop control
+
+<b>loop variables</b>
+
+- limit scope of loop-index variables to the loop itself
+- use meaningful variable names to make nested loops readable
+
+<b>loop length</b>
+
+- make loop short enough to view all at once
+- limit nesting
+- move loop innard of long loops into routines
+
+<h2>Chapter 17: Unusual Control Structures</h2>
+
+<b>Multiple Returns from a Routine</b>
+
+- use a return when it enhances readability
+- use guard clauses (early returns or exits) to prevent deeply indented code
+    - e.g. if (error): return
+
+<b>Recursion</b>
+
+- there are most definitely better alternatives, so consider those first
+
+<h2>Chapter 18: Table-Driven Methods</h2>
+
+- table driven method is a way that allows you to look up information in a table rather than using logic statements (if and case)
+
+two issues is using table-driven methods:
+- how to look up entries
+- what should be stored in the table
+
+three types of table access:
+- direct access
+- indexed access
+- stair-step
+
+<h2>Chapter 19: General Control Issues</h2>
