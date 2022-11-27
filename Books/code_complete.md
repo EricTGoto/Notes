@@ -1013,3 +1013,242 @@ three types of table access:
 - stair-step
 
 <h2>Chapter 19: General Control Issues</h2>
+
+<b>Boolean Expressions</b>
+
+- use true and false for boolean tests, rather than values like 0 and 1
+- use implicit comparisons rather than explicit
+    - e.g: while (done == False)
+- move complicated expressions into boolean functions
+- positive boolean expressions tend to be easier to read
+    - DeMorgan's Theorems can simplify boolean tests with negatives
+- use patentheses to clarify boolean expressions
+- know how boolean expressions are evaluated
+    - some languages short-circuit others don't and so on
+- organize numeric tests from smallest to largest
+    - e.g. if want values between a min and a max MIN_VALUE < i and i < MAX_VALUE
+    - e.g if want values other than values between two points i < MIN_VALUE or MAX_VALUE < i
+- compare numbers explicitly to 0 rather than implicit (if checking for 0 of course)
+- compare pointers to null
+
+<b>On Improving Deep Nesting</b>
+
+- studies show that few people can understand more than three levels of nested ifs
+- if nesting gets too deep, refactor the tests
+    - maybe conversion to if-else
+- may be possible to convert to a case statement
+- put deeply nested code into own routine
+- use a more object oriented approach
+- use exceptions
+
+<b>Structured Programming</b>
+
+- the core idea is a program should use only have one in and one out
+- a structured program progresses in an orderly way rather than jumping around, so it is easier to understand
+
+<b>Control Structures and Reducing Complexity</b>
+
+- one way of measuring complexity with regards to control structures is counting the number of "decision points"
+- every path is a decision point
+- should have at most 6 decision points, more will need to consider refactoring
+
+<h2>Part 5: Code Improvements</h2>
+
+<h2>Chapter 20: The Software-Quality Landscape</h2>
+
+<b>Characteristics of Software Quality</b>
+
+Software has both external and internal quality characteristics.
+
+External characteristics are characteristics that a user is aware of.
+
+Examples of external characteristics:
+- correctness: degree to which system is free from bugs
+- usability: how easy for user to use and learn to use
+- efficiency: how taxing it is on users system
+- reliability: ability for system to perform required functions consistently, how long time between failures?
+- integrity: how secure the software is
+- adaptability: the extent to which a system can be used in applications or environments other than those for which it was specifically designed
+- accuracy: how accurate the functionality is, e.g. if it is a calendar software, are time calculations between two dates correct?
+- robustness: ability of a system continuing to function with invalid inputs, bugs, errors, etc
+
+Internal characteristics:
+- maintainability: easy of modifying, change/add features, improving performance, fixing bugs
+- flexibility: ability to modify for different applications or environments than it was originally designed for
+- portability: ease of modifying system to operate in an environment different from that for which it was designed
+- reusability: extent and ease of reusing parts of a system in other systems
+- readability: how easily can you read and understand the code
+- testability: degree to which you can unit test and system test, degree of being able to verify that system meets its requirements
+- understandability: ease of comphrehending system at both system organizational and detailed statement levels
+
+<b>Cost of Finding/Fixing Defects</b>
+
+- a study found that only 3.5 hours needed to find error with code inspections, while testing took 15-25 hours
+- Microsoft did a study anf found that it takes three hours to find and fix a defect with code inspection, but 12 hours to find and fix a defect by using testing
+
+<b>Author's recommendation for achieving highter than average quality</b>
+
+combine various defect detection technique to maximize defect finding chance
+
+- formal inspection of all requirements, architecture, and designs for critical parts of a system
+- modeling or prototyping
+- code reading/inspections
+- execution testing
+
+<b>When to do quality assurance</b>
+
+- all stages
+    - remember, finding a defect earlier is good!
+
+important point: does management understand that quality assurance incurs additional costs up fornt in order to save costs later?
+
+<h2>Chapter 21: Collaborative Construction</h2>
+
+The purpose of collaborative construction is to improve software quality.
+
+The cost of pair programming is higher than the cost of solo development - on the order of 10-25% - but the reduction in
+development time appears to be on the order of 45 percent.
+ - this is because it lowers the amount of errors that will be pushed into production and have to be fixed later. collaborative construction allows you to find a significant amount of errors early and be able to fix them
+
+code inspections bring up the level of novice developers
+
+<b>Pair Programming</b>
+
+- 2 people programming on one machine, one person types and other watches and thinks about the code being written. person typing and thinking switch in intervals
+
+tips:
+- support pair programming with coding standards
+- use pair programming for assignments where the pair will benefit from it
+- person watching should be an active participant and critically thinking and analyzing code
+- rotate pairs
+- encourage pairs to match each other's pace
+- avoid pairing two noobs
+
+<b>Formal Inspections</b>
+
+- when a group of people prepare beforehand for a formal meeting on finding defects in a design or code
+- pace of about 150-200 statements an hour is good
+- solutions shouldn't be discussed, just finding defects
+- should not last more than 2 hours
+- after the inspection, a report is produced which lists each defect, including its type and severity
+- use a checklist to go over frequently occurring problems in the past
+
+<h2>Chapter 22: Developer Testing</h2>
+
+Unit testing - testing an individual part of a system, like one function or class
+Integration testing - where two or more classes, packages, components or subsystems are tested
+Regression testing - testing for errors that have occurred before, can run previously made tests
+System testing - execution of software in final configuration
+
+- test for each relevant requirement to make sure that the requirement has been implemented
+- use a checklist of the kinds of errors you've made on projects to date
+- plan to test and find defects as early as possible
+
+Author recommends writing tests first.
+
+<b>Things to look out for in testing</b>
+
+- only writing clean tests
+    - important to write tests for ways the code could break
+- write a test for each path in code
+- boundry errors
+- using good test data
+
+<b>Where do errors come from?</b>
+
+- 25% structural, 22% data, 16% functionality, 10% construction, 8% requirements
+- scope of most errors is fairly limited - a study found 85% of errors could be corrected without modifying more than one routine
+- many errors are outside the domain of construction, that is thin domain knowledge, fluctuating and conflicting requirements, and communication and coordination breakdown
+- most construction errors are the programmers' fault: 95% are caused by programmer,2% by system software, 1% hardware (back in the 80s)
+- 36% of construction errors are typos
+- misunderstanding design results in errors
+- most errors are easy to fix
+
+<h2>Chapter 23: Debugging</h2>
+
+Debugging is the process of identifying the root cause of an error and correcting it.
+
+<b>Defects as learning opportunities</b>
+Defects can allow you to learn:
+
+- more about the program you're working on
+- about the kinds of mistakes you make
+- about the quality of your code from POV of someone who has to read it
+- about how you solve problems
+    - does the approach work? do you guess randomly? where can you improve?
+- about how you fix defects
+    - do you make easiest possible corrections that may result in problems later? or make thorough fixes?
+
+<b>Ineffective approaches</b>
+
+- find defect by guessing
+    - scattering rpint statements randomly
+- not understanding the problem or context
+- fix the error with a very specific solution, i.e. creating a special case just for the error
+
+<b>Effective approach to debugging</b>
+
+Use a scientific approach
+- stabilize the error
+    - make it occur reliably
+- locate the source of the error
+    - gather the data that produces the defect
+    - analyze the data that has been gathered, and form a hypothesis about the defect
+    - determine how to prove or dissprove the hypothesis, either by testing the program or examining the code
+    - prove or disprove the hypothesis
+- fix the defect
+- test the fix
+- look for similar errors
+
+Stabilize the error
+- hard to diagnose a problem without being able to make it occur reliably
+- error that doesn't occur predicably is usually an initialization error, a timing issue, or a danlging pointer problem
+- narrow down a test case to the simplest one that still produces the error
+- play around with the factors you think produce the error to narrow down the cause
+
+Tips for finding defects:
+- brainstorm for possible hypotheses
+- use a notepad
+- narrow the suspicious region of the code
+    - try using a divide and conquer technique to remove half the code every time
+- check code that's changed recently
+- integrate incrementally
+- talk to someone else about the problem
+
+Fixing the defect:
+- understand the problem before you fix it
+- understand the program, not just the problem
+    - not necessarily the entire code but at least the code in the same file
+- make sure that the problem was diagnosed correctly
+- don't rush
+- don't use a duct tape type solution, fix the problem entirely
+- add unit test that exposes the defect
+
+<h2>Chapter 24: Refactoring</h2>
+
+Code is always changing. We want to make sure that whenever it is modified, the quality increases.
+Treat modifications as opportunities to improve the existing design of a program.
+
+Strive to improve code so that future changes are easier.
+
+<b>Reasons to Refactor</b>
+
+- code is duplicated
+- a routine is too long
+- a loop is too long or deeply nested
+- class has poor cohesion
+- class interface does not provide a consistent level of abstraction
+- too many parameters for a routine
+- changes require parallel modifications to multiple classes
+- related items are not organized into a class
+- a class doesn't do very much
+- poor naming
+- global variables are used
+- comments used to explain difficult/bad code
+- data members are public
+- routine uses setup/takedown code
+
+<b>Useful refactorings</b>
+
+<h2>Chapter 25: Code-Tuning Strategies</h2>
+<h2>Chapter 26: Code-Tuning Techniques</h2>
