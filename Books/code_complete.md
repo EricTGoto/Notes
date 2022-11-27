@@ -1250,5 +1250,16 @@ Strive to improve code so that future changes are easier.
 
 <b>Useful refactorings</b>
 
+- replace a magic number with a named constant
+- rename a variable with a clearer or more informative name
+- move an expression inline
+- replace an expression with a routine
+- intoduce an intermediate variable
+- convert a multiuse variable to multiple single-use variables
+- use a local variable for local purposes rather than a parameter
+    - create a variable to store a copy of the parameter instead of working with the parameter directly (not needed if only reading)
+- convert a data primitive to a class
+    - like using an int to represent money, create a Money class
+- 
 <h2>Chapter 25: Code-Tuning Strategies</h2>
 <h2>Chapter 26: Code-Tuning Techniques</h2>
