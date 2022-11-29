@@ -1231,6 +1231,7 @@ Treat modifications as opportunities to improve the existing design of a program
 
 Strive to improve code so that future changes are easier.
 
+Refactoring is changing working code in a manner that does not affect its behavior so that it is easier to understand/read or better organized.
 <b>Reasons to Refactor</b>
 
 - code is duplicated
@@ -1243,23 +1244,105 @@ Strive to improve code so that future changes are easier.
 - related items are not organized into a class
 - a class doesn't do very much
 - poor naming
+- subclass uses only a small percentage of its parents' routines
+    - convert to a has-a relationship
 - global variables are used
 - comments used to explain difficult/bad code
+    - bad code should be rewritten
 - data members are public
+    - consider hiding them behind getter/setters
 - routine uses setup/takedown code
 
 <b>Useful refactorings</b>
 
+Data level
 - replace a magic number with a named constant
 - rename a variable with a clearer or more informative name
 - move an expression inline
 - replace an expression with a routine
-- intoduce an intermediate variable
+- introduce an intermediate variable
 - convert a multiuse variable to multiple single-use variables
 - use a local variable for local purposes rather than a parameter
     - create a variable to store a copy of the parameter instead of working with the parameter directly (not needed if only reading)
 - convert a data primitive to a class
     - like using an int to represent money, create a Money class
-- 
+    - can be useful for type checking if language supports it
+- convert a set of constants to a class or an enumeration
+    - for example if you have red = 0, blue = 1, yellow = 2, make it an enumeration or into a class
+- change an array to an object
+    - if array has different types, create an object that has a field for elements of the array
+- encapsulate a collection
+    - easier to synchronize
+    - data will move around as one instance
+
+Statement Level
+- decompose a boolean expression
+    - for example, introduce variables so it is easier to read
+- move complex boolean expressions into a well named boolean function
+- consolidate fragments that are duplicated within different parts of a conditional
+    - like code that appears both in the if and the else clauses
+- return as soon as you know an answer instead of waiting
+- create and use null objects instead of testing for null values
+    - i.e. instead of checking for null value in client code, move the check into class
+    - this is because there are instances where you will have generic behavior or data associated to a class that can be null
+
+Routine-Level Refactorings
+- extracting code in to a routine
+- move routine code inline
+- long routine into a class
+- substitute a simple algorithm for a complex algorithm
+- add/remove parameters
+- separate query operations from modification operations
+    - if an operation that appears to be a query also changes an object's state, separate the query and state changing functionality into two routines
+- separate routines whose behavior depends on parameters passed in
+    - if a routine executes different code depending on the value of an input parameter, consider breaking the routine into separate routines that can be called separately
+    - like a flag
+- pass whole object/specific fields
+
+Class Implementation Refactorings
+- combine similar code into a superclass
+- extract specialized code into a subclass
+
+Class Interface refactorings
+- move a routine to another class
+- convert one class to two/eliminate a class
+    - if classes are similar, combine classes together
+    - if one class has too many responsbilities, split up
+- inheritance/delegation
+    - if a class exposes every public routine of a delegate class, inherit from the delegate class instead of using the class
+    - vice versa
+- introduce a foreign routine
+    - if class needs an additional routine and you can't modify the class, create a new routine within client class
+- encapsulate an exposed member variable
+- remove setters for fields that should/are fixed
+- encapsulate/remove unused routines
+
+System-Level refactorings
+- create definitive references for data you can't control
+    - kinda like state for front end frameworks
+- replace error codes with exceptions or vice versa
+- factory method
+    - when need to create objects based on a type code or want to work with refence objects
+
+<b>Refactoring Safely</b>
+
+- keep refactorings small
+    - be able to fully understand the impacts of the changes you make
+- factorings one at a time
+- plan out refactorings
+- test, add test cases
+- review the changes
+
 <h2>Chapter 25: Code-Tuning Strategies</h2>
+
+Before investing time in increasing performance of software, make sure you understand the tradeoffs like readability, and maintainability or even user satisfaction.
+
+Make sure that performance is a requirement and not nice-to-have.
+
+<b>Program Design</b>
+
+- if you know that a program's size and speed are important, design the program's architecture so that you can reasonably meet your size and speed goals
+- set resource goals for individual sub-systems, features and classes
+-
+
 <h2>Chapter 26: Code-Tuning Techniques</h2>
