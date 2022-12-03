@@ -1346,3 +1346,15 @@ Make sure that performance is a requirement and not nice-to-have.
 -
 
 <h2>Chapter 26: Code-Tuning Techniques</h2>
+
+
+<h2>Chapter 34: Themes in Software Craftsmanship</h2>
+
+- conquer complexity
+- process matters
+    - need a solid foudnation before building
+- write programs for people first, computers second
+- create a set of conventions and use them
+    - ensures standardization and predictability in a codebase
+- work at highest possible level of abstraction
+- iterate
