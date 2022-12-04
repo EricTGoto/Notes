@@ -1335,6 +1335,8 @@ System-Level refactorings
 
 <h2>Chapter 25: Code-Tuning Strategies</h2>
 
+Overall code performance is heavily influenced by architecture, and DSA selection. Statement level execution is often not so significant.
+
 Before investing time in increasing performance of software, make sure you understand the tradeoffs like readability, and maintainability or even user satisfaction.
 
 Make sure that performance is a requirement and not nice-to-have.
@@ -1343,9 +1345,129 @@ Make sure that performance is a requirement and not nice-to-have.
 
 - if you know that a program's size and speed are important, design the program's architecture so that you can reasonably meet your size and speed goals
 - set resource goals for individual sub-systems, features and classes
--
+
+<b>When to Tune</b>
+
+- don't optimize until you know you need to
+- start with a high quality design, make the program work, make it modular and easily modifiable. once this is all done, check performance.
+
+<b>Common Sources of Inefficieny<b>
+
+- input/output operations
+    - load things into memory instead of working directly with a database, file or across a network
+- Paging
+    - operation that causes the OS to swap pages of memory is slow
+- System calls
+    - calls to system routines are expensive
+- Interpreted languages
+    - compiled languages like C++, C# will run faster than interpreted languages like PHP and Python
+- errors
+    - leaving debugging on, improper DB design, polling nonexistent devices, etc
+
+<b>Approach to code tuning</b>
+
+- develop software by using well-designed code that's easy to understand and modify
+- if performance is poor:
+    - measure system to find slow spots
+    - determine why the slow spots are slow: poor design? poor data types or algorithms?
+    - measure each improvement one at a time
+    - if no improvement, revert code
 
 <h2>Chapter 26: Code-Tuning Techniques</h2>
+
+Note to self: 
+- chapter seems like things that I would really only need to think about in a very optimization heavy environment
+
+<b>Logic</b>
+
+- stop search after value is found
+- order tests by frequency
+- compare performance of similar logic structures
+    - in Java case is slow, but in C# case is fast
+
+<b>Expressions</b>
+
+- initialize at compile time
+    - instead of using log(2), define a variable LOG2 = 0.69314, if the log(2) calculation will occur many times
+- precompute results (similar to above), eliminate common subexpressions
+
+<h2>Part 6: System Considerations </h2>
+
+<h2>Chapter 27: How Program Size Affects Construction</h2>
+
+- Half of projects have team sizes of 10 people or less. Two thirds are 25 or less.
+- as project size increases, errors usually come more from requirements and design
+- on small projects, construction errors make up about 75% of all errors
+- defect density increases with project size
+- in small projects, single biggest influence on productivity is individual skill of programmer, but as project size increases, team size and organization become greater influences
+- productivity is usually lower on a large project than on a small one
+- proportion of activities change with project size. architecture and requirements become much more important and will require more resources to complete
+
+<h2>Chapter 28: Managing Construction</h2>
+
+<b>Techiniques for encouraging good coding</b>
+
+- assign two people to every part of the project
+- review every line of code
+- require code sign-offs
+- route good code examples for review
+- reward good code
+
+<b>Configuration management</b>
+
+- practice of identifying project artifacts and handling changes systematically
+
+<b>Estimating a construction schedule</b>
+
+- estimate pieces of the project and then add the pieces together
+- have other people estimate their own tasks, and then add the task estimates together
+- establish objectives, identify requirements, and then use several different estimation techniques
+
+<h2>Chapter 29: Integration</h2>
+
+Integration is when you combine separate software components into a single system.
+
+<b>Incremental Integration</b>
+
+- write and test a program in small pieces and then combine the pieces one at a time
+    - develop a small, functional part of the system. thoroughly test and debug it. this first part will act as a base that other components will be connected to
+    - design, code, test and debug another calss.
+    - integrate. test and debug combination. repeat until work is complete.
+
+<b>Benefits of Incremental Integration</b>
+
+- errors are easy to locate
+    - there's only one new thing being added to the system so you know where to look
+- units of system are tested more fully
+- improved progress monitoring
+
+<b>Integration Approaches</b>
+
+- bottom up, top-down, sandwich, risk oriented, feature oriented, etc
+
+<b>Daily builds and smoke test</b>
+
+- since book was written 20 years ago, this was what the author recommended.
+- but now we have CICD, which is the defacto method of software integration
+
+<h2>Chapter 30: Programming Tools</h2>
+
+- tools like IDEs can help you program
+- good to look for tools
+
+<h2>Part 7: Software Craftsmanship</h2>
+
+<h2>Chapter 31: Layout and Style</h2>
+
+"Good programmers write code that humans can understand"
+
+- structure helps experts to perceive, comprehend and remember important features of programs
+    - bottom line is that a program should be structured consistently
+
+<b>Objectives of good layout</b>
+
+- accurately represent the logical structure of the code
+- improve readability
 
 
 <h2>Chapter 34: Themes in Software Craftsmanship</h2>
