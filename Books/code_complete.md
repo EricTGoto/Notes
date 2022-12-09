@@ -1467,8 +1467,53 @@ Integration is when you combine separate software components into a single syste
 <b>Objectives of good layout</b>
 
 - accurately represent the logical structure of the code
+- consistently represent the logical structure of the code
 - improve readability
+- withstand modifications
 
+<b>Layout techniques</b>
+
+- whitespace
+    - group together related statements
+    - blank lines to separate unrelated statements
+- indentation
+    - indent statements that are logically subordinate to another statement
+- one statement per line
+- declare variables close to where they are first used
+
+- class layout
+    - comment
+    - class data
+    - public routines
+    - protected routines
+    - private routines
+
+<h2>Chapter 32: Self Documenting Code</h2>
+
+Kinds of comments:
+- repeat of the code
+- explanation of the code
+- marker in the code
+    - like a note that the code isn't complete yet
+- summary of the code
+    - like doc string in python
+- description of code's intent
+- information that cannot be expressed by code
+    - references to requirements/documentation, copyright, confidentiality notice, etc
+
+Acceptable comments: summary, intent, information that can't be expressed by code
+
+
+- find an efficient way to write comments, don't make them fancy with dots and dashes
+- endline comments: hard to maintain, hard to read, hard to make it meaningful since it is commenting one line
+- endline comments for data declarations are OK
+    - allowable numeric values
+    - units
+    - limitations of the variable due to physical factors like an input device
+- avoid abbreviations
+- comments before if, loop, block of statements are generally OK
+- describe each routine in one or two sentences at the top of the routine
+- comment on limitation of routines
 
 <h2>Chapter 34: Themes in Software Craftsmanship</h2>
 
