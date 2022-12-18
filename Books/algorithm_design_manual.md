@@ -91,6 +91,20 @@ arrays:
 - Geometric data structures: kd-trees
 - Graphs: adjacency matrixes/adjacency lists
 
+<h2>Chapter 4: Sorting</h2>
 
+- good sorting algorithms run in O(nlogn) time.
+- many important problems can use sorting as a first step (note some of these could be faster using hashing)
+    - searching
+    - closest pair
+    - element uniqueness
+    - finding the mode, finding how often an element occurs
+    - kth largest item
+
+Good sorting algorithms
+- heap sort
+- merge sort
+- quicksort
+- distribution sort
 
 
