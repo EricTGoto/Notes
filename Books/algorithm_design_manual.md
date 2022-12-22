@@ -107,4 +107,11 @@ Good sorting algorithms
 - quicksort
 - distribution sort
 
+<h2>Chapter 5: Divide and Conquer</h2>
 
+- binary search: quintessential divide-and-conquer algorithm
+
+<b>recurrence relations</b>
+
+- equation in which a function is defined in terms of itself
+- use the master theorem to solve recurrence relations
