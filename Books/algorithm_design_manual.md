@@ -115,3 +115,17 @@ Good sorting algorithms
 
 - equation in which a function is defined in terms of itself
 - use the master theorem to solve recurrence relations
+
+<h2>Chapter 11: NP-Completeness</h2>
+
+- Theory of NP Completeness allows us to determine whether or not an efficient algorithm exists for a given problem.
+- use reductions between pairs of problems to show that they are equivalent
+    - a fast algorithm for one of the problems implies a fast algorithm for the other (and vice versa)
+
+<b>P vs NP</b>
+
+- P: algorithmic problems with a polynomial time algorithm to solve it. i.e P for polynomial time
+- NP: problems that can be verified in polynomial time. i.e. NP for not necessarily polynomial time
+
+primary issue in P v NP is whether verification is really easier than initial discovery of a solution
+    - answer may seem obvious that verification is easier. e.g. verifying TSP tour has at most weight of k. just add up the weights, which is done in linear time, but to find the tour it takes exponential time
