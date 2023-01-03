@@ -116,7 +116,7 @@ Good sorting algorithms
 - equation in which a function is defined in terms of itself
 - use the master theorem to solve recurrence relations
 
-<h2>Chapter 6: Graph Traversal</h2>
+<h2>Chapter 7: Graph Traversal</h2>
 
 Graph: consists of a set of vertices V together with a set of edges E. symbolically G = (V, E)
 
@@ -148,6 +148,21 @@ Graph: consists of a set of vertices V together with a set of edges E. symbolica
 
 - DFS: Depth First Search: explore an entire path one at a time
 - BFS: Breadth First Search: level by level. O(n+m)
+
+<h2>Chapter 8: Weighted Graph Algorithms</h2>
+
+<b>Minimum Spanning Trees</b>
+
+Spanning Tree: subset of edges E forming a tree connecting all vertices of V
+
+Minimum Spanning Tree: spanning tree with lowest sum of weights
+
+Two Algorithms:
+Both run in O(n^2) unless we use a special data structure called union find
+- Prim's Algorithm
+- Kruskal's Algorithm
+
+Union Find Data Structure
 
 
 <h2>Chapter 11: NP-Completeness</h2>
