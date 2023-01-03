@@ -116,6 +116,40 @@ Good sorting algorithms
 - equation in which a function is defined in terms of itself
 - use the master theorem to solve recurrence relations
 
+<h2>Chapter 6: Graph Traversal</h2>
+
+Graph: consists of a set of vertices V together with a set of edges E. symbolically G = (V, E)
+
+- graphs are important because they can be used to represent any relationship
+    - network of roads, cities, electrical circuits
+
+<b>Properties of Graphs</b>
+
+- undirected vs directed: a graph G = (V,E) is undirected if the edges are bidirectional. Directed if all the edges are one directional
+- weighted vs unweighted: each edge (or vertex) in a weighted graph G is assigned a numerical value, which represents its cost. e.g. finding a shortest path in an undirected graph would require finding a path with the least amount of edges, but in a directed graph would mean finding the path with the lowest sum of weights
+- simple vs non-simple: a simple graph is one in which self-loops and multiedges do not occur
+    - self-loop: edge involving only one vertex
+    - multiedge: an edge that appears more than once in the graph
+- sparse vs dense: graphs are sparse when only a small fraction of the vertexes have edges between them (linear amount). dense graphs typically have n^2 edges
+- cyclic vs acyclic: a cycle is when a graph forms a loop (usually more than 3 vertices)
+- embedded vs topological: a graph is embedded if it is assigned geometric positions, like in a drawing of a graph. a topological graph is merely a set of vertices and edges
+- implicit vs explicit: implicit graphs are graphs that are built as they are used 
+- labeled vs unlabeled: a labeled graph will have unique names or identifiers attached to each vertex
+
+<b>Data structures for graphs</b>
+
+- adjacency matrix: represents a graph G using an nxn matrix M where element M[i, j] = 1 if (i,j) is an edge of G
+- adjacency list: represents a graph G as an array where each index represents a vertex and contains a linked list of each of its neighbours
+    - good for storing sparse graphs
+    - uses less memory
+    - generally better for most problems
+
+<b>Graph Traversal</b>
+
+- DFS: Depth First Search: explore an entire path one at a time
+- BFS: Breadth First Search: level by level. O(n+m)
+
+
 <h2>Chapter 11: NP-Completeness</h2>
 
 - Theory of NP Completeness allows us to determine whether or not an efficient algorithm exists for a given problem.
