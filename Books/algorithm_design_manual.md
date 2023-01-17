@@ -158,11 +158,60 @@ Spanning Tree: subset of edges E forming a tree connecting all vertices of V
 Minimum Spanning Tree: spanning tree with lowest sum of weights
 
 Two Algorithms:
-Both run in O(n^2) unless we use a special data structure called union find
+Both run in O(n^2) unless we think a bit deeper about the DS we utilize
 - Prim's Algorithm
 - Kruskal's Algorithm
 
-Union Find Data Structure
+Prim's Algorithm
+- a greedy algorithm where we choose the minimum weight edge and add it to the tree
+
+```
+Prim
+    Select arbitrary vertex to start tree T
+    While (non tree vertices):
+        Find minimum weight edge between tree and non-tree vertex
+        Add selected edge and vertex to T
+```
+
+Runs in O(n^2) time with this implementation. Possible to use sophisticated PQ implementations to create an O(m + nlgn) algorithm.
+
+Kruskal's Algorithm
+- also a greedy algorithm where we build up connected components of vertices
+- initially, each vertex is its own "component"
+- algorithms repeatedly considers the lightest remaining edge and tests whether its two endpoints lie within the same connected component
+- if different, insert edge and merge the two components
+
+```
+Kruskal
+    Put the edges into a PQ ordered by increasing weight
+    count = 0
+    while (count < n - 1) do
+        get next edge (v,w)
+        if (component v != component w)
+            increment count
+            add (v,w) to T
+            merge component v and component w
+```
+
+Sorting m edges takes O(mlgm) time. While loop makes at most m iterations, testing the connectivity of two trees with at most n edges and n vertices, so O(mn).
+
+<b>Union Find</b>
+
+Kruskal's algorithm runs in quadratic time, but with the union-find data structure it can run in O(mlgm) time. 
+
+Kruskal's algorithm needs a data structure that efficiently supports the following operations:
+- same component (v1, v2)
+- merge components (C1, C2)
+
+The union-find DS represents each subset as a backwards tree. Each index contains a pointer to its parent.
+We implement two operations, find and union two satisfy the same component and merge component operations.
+
+- find(i) - finds the root of the tree containing elemnt i, by walking up parent pointers until there is nowhere to go. returns label of root.
+- union(i, j) - link the root of one of the trees to the tree containing the other so find(i) equals find(j)
+
+We should be careful to minimize the time it takes to execute unions and finds. We do this by making the smaller tree the subtree of the bigger one.
+
+Union and find both run in O(logn). Why? Becausew when we merge trees, the height only increases when the two trees are the same height. So we must at least double the number of nodes to increase the height. At most lgn doublings can be performed!
 
 
 <h2>Chapter 11: NP-Completeness</h2>
