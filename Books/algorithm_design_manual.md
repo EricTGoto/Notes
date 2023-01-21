@@ -213,7 +213,22 @@ We should be careful to minimize the time it takes to execute unions and finds. 
 
 Union and find both run in O(logn). Why? Becausew when we merge trees, the height only increases when the two trees are the same height. So we must at least double the number of nodes to increase the height. At most lgn doublings can be performed!
 
+<b>Shortest Paths</b>
 
+A path is a sequence of edges connecting two vertices. 
+
+BFS works in unweighted graphs to find the shortest path, but it does not work with weighted paths.
+
+<b>Dijkstra's Algorithm</b>
+
+Djikstra's algorithm finds the shortest path from a vertex s to a destination t in a weighted graph.
+
+The algorithm occurs in stages. Each stage establishes a shortest path from s to some new vertex.
+Each "stage" is going to a new vertex and then "relaxing" the neighbouring vertices with new weights.
+
+Dijkstra's Algorithm runs worst case in O(n^2). The algorithm doesn't work with graphs that have negative cost edges.
+
+The algorithm itself is very similar to Prim's algorithm, as it chooses the lowest cost edge every at every stage.
 <h2>Chapter 11: NP-Completeness</h2>
 
 - Theory of NP Completeness allows us to determine whether or not an efficient algorithm exists for a given problem.
