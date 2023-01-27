@@ -229,19 +229,31 @@ Each "stage" is going to a new vertex and then "relaxing" the neighbouring verti
 Dijkstra's Algorithm runs worst case in O(n^2). The algorithm doesn't work with graphs that have negative cost edges.
 
 The algorithm itself is very similar to Prim's algorithm, as it chooses the lowest cost edge every at every stage.
-<h2>Chapter 11: NP-Completeness</h2>
 
-- Theory of NP Completeness allows us to determine whether or not an efficient algorithm exists for a given problem.
-- use reductions between pairs of problems to show that they are equivalent
-    - a fast algorithm for one of the problems implies a fast algorithm for the other (and vice versa)
+<h2>Chapter 9: Combinatorial Search</h2>
 
-<b>P vs NP</b>
+<b>Backtracking</b>
 
-- P: algorithmic problems with a polynomial time algorithm to solve it. i.e P for polynomial time
-- NP: problems that can be verified in polynomial time. i.e. NP for not necessarily polynomial time
+- systematic way to run through all possible configurations of a search space
+- at each step in the backtrakcing algorithm, we try to extend a given partial solution a = (a1, a2,.. , an) by adding another element at the end, then we test whether the solution is complete or whether it is still correct and extendable to a complete solution
+- usually done with DFS
 
-primary issue in P v NP is whether verification is really easier than initial discovery of a solution
-    - answer may seem obvious that verification is easier. e.g. verifying TSP tour has at most weight of k. just add up the weights, which is done in linear time, but to find the tour it takes exponential time
+Examples:
+- constructing all subsets
+- combinations
+- permutations
+
+<b>Search Pruning</b>
+
+- pruning is abandoning a search direction when we discover that the partial solution cannot be extended into a full solution
+
+<b>Best-First Search/Branch and Bound</b>
+
+In a normal back tracking scheme, the search order is determined by how the search candidates are constructed.
+If the search candidates are contained in an array, then the items in the front of the array are tried before the ones in the back of the array.
+
+Best-First Search/Branch and Bound, assigns a cost to every partial solution we generate. We use a priority queue to keep track of the partial solutions by cost.
+
 
 <h2>Chapter 10: Dynamic Programming</h2>
 
@@ -315,3 +327,17 @@ Other examples of DP problems that are good to study:
 - Unordered Partition/Subset Sum
 - Ordered Partition
 - Parsing Context
+
+<h2>Chapter 11: NP-Completeness</h2>
+
+- Theory of NP Completeness allows us to determine whether or not an efficient algorithm exists for a given problem.
+- use reductions between pairs of problems to show that they are equivalent
+    - a fast algorithm for one of the problems implies a fast algorithm for the other (and vice versa)
+
+<b>P vs NP</b>
+
+- P: algorithmic problems with a polynomial time algorithm to solve it. i.e P for polynomial time
+- NP: problems that can be verified in polynomial time. i.e. NP for not necessarily polynomial time
+
+primary issue in P v NP is whether verification is really easier than initial discovery of a solution
+    - answer may seem obvious that verification is easier. e.g. verifying TSP tour has at most weight of k. just add up the weights, which is done in linear time, but to find the tour it takes exponential time
