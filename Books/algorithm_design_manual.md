@@ -242,3 +242,76 @@ The algorithm itself is very similar to Prim's algorithm, as it chooses the lowe
 
 primary issue in P v NP is whether verification is really easier than initial discovery of a solution
     - answer may seem obvious that verification is easier. e.g. verifying TSP tour has at most weight of k. just add up the weights, which is done in linear time, but to find the tour it takes exponential time
+
+<h2>Chapter 10: Dynamic Programming</h2>
+
+Algorithms for optimization problems require proof that they always return the best possible solution. Greedy algorithms that make the best local decision at each step are usually efficient, but usually do not guarantee global optimality. Ehaustive search algorithms try all possibilities and select the optimum solution, but are usually cost prohibitive.
+
+Dynamic programming allows you to return the optimal solution while being efficiency by using memory to store intermediate results to avoid recomputation.
+
+Dynamic programming is a technique for efficiently implementing a recursive algorithm by storing partial results. It requires being able to identify that a recursive algorithm is recomputing the same problems over and over again. Once that is identified, we change the recursive algorithm so that the computations are stored and we can look it up when needed.
+
+Dynamic programming starts with a recursive algorithm. Only when we have a working recursive algorithm, we should convert it to the DP method.
+
+Classic DP Example: Fibonacci Numbers:
+
+- Fibonacci Numbers by Recursion
+
+```
+def fib(n):
+    if n == 0:
+        return 0
+
+    if n == 1:
+        return 1
+    
+    return fib(n - 2) + fib(n - 1)
+```
+
+This builds a large recursive tree which takes exponential time (1.6^n) to compute.
+When we draw out the tree, we can easily see that there are places that are recomputed.
+So, we can store these results and eliminate every branch of the tree except the main one!
+
+- Fibonacci Numbers by Caching (Memoization)
+
+```
+def fib(n):
+    cache = initCache(n)
+
+    if n <= 1:
+        return n
+    if n in cache:
+        return cache[n]
+    
+    cache[n] = fib(n - 2) + fib(n - 1)
+
+    return cache[n]
+```
+
+By storing the results in the cache, we reduced the fibonacci algorithm to a linear time algorithm.
+This algorithm is still recursive and uses O(n) space. There is one more method which we think of as the true Dynamic Programming solution.
+
+- Fibonacci Numbers by Dynamic Programming
+
+```
+def fib(n):
+    temp = 0
+    first = 0
+    second = 1
+
+    for integer in range(n):
+        temp = first + second
+        first = second
+        second = temp
+    
+    return first + second
+```
+Here we explicitly specified the order of evaluation of the recurrence relation.
+
+Other examples of DP problems that are good to study:
+- Binomial Coefficients
+- Approximate String Matching
+- Longest Increasing Subsequence
+- Unordered Partition/Subset Sum
+- Ordered Partition
+- Parsing Context
