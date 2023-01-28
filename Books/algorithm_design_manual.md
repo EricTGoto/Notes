@@ -116,6 +116,21 @@ Good sorting algorithms
 - equation in which a function is defined in terms of itself
 - use the master theorem to solve recurrence relations
 
+<h2>Chapter 6: Hashing and Randomized Algorithms</h2>
+
+<b>Why is Hashing a Randomized Algorithm?</b>
+
+We can improve hashing functions by introducing randomness such that it's worst case scenario goes away.
+We pick a hash function at random from a large set of possibilities.
+
+H(x) = ((f(x) mod p) mod m) where f(x) is large relative to p, p is relatively large to me, and m is relatively prime to p.
+
+Applications of random hashing:
+- bloom filters
+- perfect hashing
+- minwise hashing
+- efficient string matching
+
 <h2>Chapter 7: Graph Traversal</h2>
 
 Graph: consists of a set of vertices V together with a set of edges E. symbolically G = (V, E)
