@@ -259,3 +259,163 @@ JSON-API says that an error object may have the following members:
 
 - don't return HTTP 200 with an error code, use 4XX or 5XX to alert the user that something bad happened
 - using the same status code for many different situations. instead use different status codes and an error message that explain the error.
+
+## Chapter 12: HATEOAS
+
+Stands for Hypermedia as the Engine of Application State.
+
+In short, means two things:
+- Content Negotiation
+- Hypermedia controls
+
+### Content Negotiation
+
+Content negotiation allows the client to specify a return MIME type like YAML, JSON, XML with the accept header.
+
+The Content-Type response header will contain the return MIME type.
+
+An API should respond with a default content type or respect the Accept header and either output the requested content type or return a 415 if the API does not support it.
+
+### Hypermedia Controls
+
+The last step into achieving full RESTful compliance. Involves adding links to other content, relationships and further actions to allow a client to browse around the API.
+
+Short Aside: URI vs URL:
+- URL is the full path like what you see in the browser address bar
+- URI is the path, extension, and query string
+
+Can be done by adding an object that contains a rel and uri pairs.
+```
+{
+    "rel" : "place.image"
+    "uri" : "places/2/image"
+}
+```
+
+How do we discover resources?
+
+With the ```OPTIONS``` verb.
+
+## Chapter 13: API Versioning
+
+General Advice:
+- try to limit change as much as possible
+
+But business requirements will require making changes so then we must use versioning.
+
+### Approaches to API Versioning
+
+**URI**
+
+Putting a persion number in the URI like:
+
+`https://api.example.com/v1/places`
+
+Pros:
+- simple for API developers
+- simple for API consumers
+
+Cons:
+- not technically RESTful
+- forces API consumers to do weird stuff to keep links up-to-date
+
+**Body and Query Params**
+
+If you want to take the version URI out of the URL, we can put it in the body or the query parameters.
+
+Putting the version inside the body solves the issue of URLs changing over time, but can lead to difficulties if the content-type is something like images/png or text/csv.
+
+Trying to solve this issue, some suggest to put the version into the query parameters, but that puts the API version back into the URL.
+
+Pros:
+- simple for API developers
+- simple for API consumers
+- keeps URLs the same when param is in the body
+- more RESTful than putting version in the URI
+
+**Custom Request Header**
+
+If URL and HTTP body are unsuitable, headers is the last place.
+Unfortunately, this will confuse cache systems and will require users to remember what the custom headers are.
+
+Pros:
+- simple for API consumers if they remember custom header
+- keep URLs the same
+
+Cons:
+- cache systems can get confused
+- API developers can get confused
+
+**Content Negotiation**
+
+The `Accept` header is designed to ask the server to respond with a specific resource in a different format.
+Traditionally, we think of this as HTML, JSON, YAML, etc, but we can generalize further, and ask for different versions as well.
+
+Github uses this method in their APIs. Their media types look like:
+
+```
+application/vnd.github[.version].param[+json]
+```
+
+They support 
+```
+application/json
+application/vnd.github+json
+```
+So if you request either of those two MIME types, it will return JSON.
+
+Without any further specification, they will return a default response which is their latest API version. (And they provide a warning that if the user does not specify a version, then apps can break)
+
+To specify a version they ask for the following:
+
+`Accept: application/vnd.github.v3+json`
+
+This method solves the caching problem, URL manipulation problems, and is RESTful. The only downside is it can be a little confusing.
+
+One downside is that if the entire API is versioned then it becomes very hard for API developers to upgrade their applications.
+
+Pros:
+- Simple for API consumers (if they know about headers)
+- Keeps URLs the same
+- HATEOAS friendly
+- Cache friendly
+
+Cons:
+- API developers can get confused (if they do not know about headers)
+- Versioning the WHOLE thing can confuse users
+
+**Content Negotiation For Resources**
+
+One of the most complex solutions, but a very scalable and is the accepted proper HATEOAS approach.
+
+If Github were to do this, they would add an extra item to their current media-type.
+
+`Accept: application/vnd.github.user.v4+json`
+
+Or can use parameters as the Accept header is capable to containing parameters
+
+`Accept: application/vnd.github.user+json; version=4.0`
+
+Pros:
+
+- Keeps URLs the same
+- HATEOAS friendly
+- Cache friendly
+- Easier upgrades for API consumers
+- can b e one code base or multiple
+
+Cons:
+- API consumers need to pay attention to versions
+- splitting codebases can be challenging
+- putting it in the same code base leads to accidental breakage, if transformers are not versioned
+
+**Feature Flagging**
+
+A way to approach versioning by allowing users to opt-in to changes via a web platform. The web platform will have an explanation of changes and gives you the chance to see if it will affect your application. If it works, then you enable the change and from then on your API will be updated. With this, every client could potentially have a different version.
+
+Cons:
+- coding this could be difficult and hard to maintain
+
+**Final Note on Versioning**
+
+all approaches are annoying in some way or technically unRESTful, but in the end you must pick what is realistic for your project and for the skill/knowledge level of your audience
