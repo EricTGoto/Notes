@@ -260,6 +260,77 @@ JSON-API says that an error object may have the following members:
 - don't return HTTP 200 with an error code, use 4XX or 5XX to alert the user that something bad happened
 - using the same status code for many different situations. instead use different status codes and an error message that explain the error.
 
+## Chapter 7: Data Relationships
+
+Relationships for your API output do not need to be directly mapped to database relationships.
+This chapter talks about how to approach related data.
+
+### Subresources
+
+For example, `/places/X/checkins`
+
+Downside is if a user already requested `/places/X`, they will have to make an additional HTTP request to get the check-ins.
+- if there is an app that wants to put all places on an area and then allow users to browse through them, an extra HTTP call will have to be made if a user clicks on a place
+- gets worse if there are more subresources like images, current_promotions, etc
+- this is called 1 + n, if we have 4 sub resources then it will be 1 + 4n 
+    - if 50 places are returned then there would be 251 requests
+
+### Foreign Key Arrays
+
+- provide an array of ids in the output so that the client can make further requests
+- con: client will have to stitch data together
+
+```
+{
+    "post": {
+        "id": 1,
+        "title": "Hello WOrld",
+        "links": {
+            "comments": ["1", "2"]
+        }
+    }
+}
+```
+
+Pro: This way we reduce the calls from 251 to 5, as we can request all the places and then go through them to see which other pieces we need and call them all together. i.e: `/comments/1,5,6,8,9`
+
+### Compound Documents (aka Sideloading)
+
+- this method expands on foreign key arrays and adds the data into the response as an extra object
+- avoids duplicating the same item multiple times
+```
+{
+    "post": {
+        "id": 1,
+        "title": "Hello WOrld",
+        "links": {
+            "comments": ["1", "2"]
+        }
+    },
+    "linked": {
+        "comments": [
+            {
+                "id": "1",
+                "message": "Hello back to u"
+            },
+            {
+                "id": "2",
+                "message": "boring"
+            }
+        ]
+    }
+}
+```
+
+### Embedded Documents (aka Nesting)
+
+- let client decide what should be embedded into the response
+
+`/places?include=checkins,images`
+
+- this will return a response with an array of places each with their checkins and images embedded into it
+- offers most flexibility, can reduce HTTP requests, reduce download size depending on what client wants
+
 ## Chapter 12: HATEOAS
 
 Stands for Hypermedia as the Engine of Application State.
