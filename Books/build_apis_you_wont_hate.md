@@ -331,6 +331,102 @@ Pro: This way we reduce the calls from 251 to 5, as we can request all the place
 - this will return a response with an array of places each with their checkins and images embedded into it
 - offers most flexibility, can reduce HTTP requests, reduce download size depending on what client wants
 
+## Chapter 9: Authentication
+
+### Approaches to Authentication
+
+**Approach 1: Basic Authentication**
+
+- it is like the standard username/password approach, but implemented on the HTTP request level
+- sends password in plaintext
+
+Pros:
+- easy to implement and understand
+
+Cons:
+- insecure over HTTP and HTTPs
+- passwords can be stored by the browser
+
+**Approach 2: Digest Authentication**
+
+- will calculate MD5 hash of password and send that
+
+Pros:
+- slightly more secure than basic auth
+
+Cons:
+- MD5 is not very secure by today's standards
+- still sending user/pw everytime
+
+**Approach 3: OAuth 1.0a**
+
+- OAuth provides a way for end-users to authorise third-party access to their server resources without sharing their credentials
+    - Flow: third party directs login to a main service (e.g. Google), they log in with their Google credentials, and then Google will send them back to the third party service with an OAuth Token and an OAuth Token secret
+    - then requests are sent with the Outh Token in the header and the OAuth Secret is used to encrypt the request
+
+Pros:
+- super secure, even without SSL
+- does not send user/pw in every request
+- stops having third party applications storing your user/pw
+
+Cons:
+- tokens never change
+- complicated to interact with
+
+**Approach 4: OAuth 2.0**
+
+- dropped the secret token and the signature encryption
+- enforces SSL
+- tokens can expire
+- have different modes (grant types) in which the OAuth 2.0 server can run
+    - changes the input and may provide different outputs
+
+Grant Types
+
+- Authorization Code: 
+    - similar to OAuth1.0a where a client web app creates a link to OAuth server or the service they want to log into -> user logs in -> redirect back to client web app with a code in the query string -> web app POSTs code to OAuth server -> OAuth server grants access token
+    - useful when you have multiple sites or want to share logins with other partners
+
+- Refresh Token:
+    - token which expires
+
+- Client Credentials:
+    - an application can be given a client_id and client_secret and be authenticated and be able to interact with APIs
+    - handy for CRON jobs, worker processes, daemons
+
+- Password (user credentials)
+    - skips the redirect flow that the Authorization Code grant goes through
+    - provide a username/password to the OAuth 2.0 server and it gives you back an access token
+    - make a proxy script that takes a username and password as POST items, then pass onto OAuth 2.0 server with the client_id and client_secret which you can hide in a config file
+
+- Custom Grant Types exist too
+
+## Chapter 10: Pagination
+
+Splitting up data into multiple HTTP requests to limit HTTP response size
+
+Reasons:
+- limit download time
+- database will slow if you need to return a lot of records
+- presentation side will also have trouble with a big response
+
+### Offsets and Cursors
+
+Have a cursor that allows client to specify which record to display from and then count to return number of records. There must be a default value for count (otherwise there is no limiting)
+```
+{
+    "data": [
+
+    ],
+    "pagination": {
+        "cursors": {
+            "after": 12,
+            "next_url": "/places?cursor=15&count=5"
+        }
+    }
+}
+```
+
 ## Chapter 12: HATEOAS
 
 Stands for Hypermedia as the Engine of Application State.
