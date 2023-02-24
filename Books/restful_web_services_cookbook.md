@@ -152,3 +152,51 @@ Merging address books
 
 - important to define a unique resource for these operations to avoid tunneling
     - tunneling is when you use the same method on a single URI for different actions
+
+## Chapter 3: Designing Representations
+
+- representations are the concrete elements in a resource like the response headers, response body that you program and clients/servers operate on
+
+### Using Headers to Annotate Representations
+
+- use following headers to annotate representations that contain message bodies
+    - Content-Type: to describe type of the representation
+    - Content-Length: to specify size in bytes of the body
+    - Content-Language: to specify language if representation is localized
+    - Content-Encoding: to indicate type of compression if used
+
+### Interpreting Headers
+
+- Content-Type: when you receive a request without this header, return 400 bad request. when you receive a response without this header from a server, treat it as a bad response
+
+### Choosing a representation format and a media type
+
+- use well-known media types for representations such as JSON, xml, html\
+
+### Designing representaitons of collections
+
+- i.e paginated collections
+- include self link to the collection resource, link to next page, link to previous page, indicator of size of collection
+    - avoid computing exact size of collection, may be expensive, or unnecessary
+
+### Keep collections homogenous
+- when designing a representation format for a colelction, include only attributes that apply to all members of the collection.
+    - i.e. don't include a wheels attribute for a collection that includes boats and cars. you can include a make or year or height as these attributes exist for both a car and a boat
+
+### Use common data formats
+- there are all sorts of standard for decimal, floats, country codes, dates, times, language tags, etc
+
+### Encoding binary data
+- use multipart media types such as multipart/mixed, multipart/related, etc
+- avoid encoding binary data within textual formats using Base64 encoding
+- multipart message is a message containing several message parts each separated by a boundary
+- creating and parsing multipart messages can be cumbersome and complex, may be better to provide a link to fetch the binary data as a separate resource, e.g. a link to a video
+
+### Returning Errors
+
+- include a body in the error response for all errors except when the HTTP method is HEAD
+- in body include:
+    - brief message describing error condition
+    - longer description with information on how to fix error condition, if applicable
+    - identifier for error
+    - link to learn more if applicable
