@@ -81,3 +81,74 @@ PUT /user/bob/address/work_address
 ### Custom methods
 
 - use POST over custom methods
+
+## Chapter 2: Identifying Resources
+
+one of the first steps in developing a REST API is designing the resource model
+
+### Resources from domain nouns
+
+- simplistic way to identify resources
+- find domain nouns that can be operated using "create", "read", "update", "delete" and use POST, GET, PUT, DELETE methods to impement each CRUD operation
+- this strategy has some problems as CRUD is limited
+    - e.g: finding traffic directions, converting distances, transfer money. how do we map these to HTTP methods?
+
+### Organize Resources into Collections
+
+- identify similar resources based on applciation-specific criteria
+    - e.g. resources taht share the same database schema
+        - social network
+            - collection of users
+            - collection of friends of any given user
+            - collection of followers of a user
+            - etc..
+- can use collection resources for the following
+    - paginated views of a collection
+    - search the collection for its members or obtain a filtered view of the collection (query responses)
+    - create new member resources using the collection as a factory (through POST requests to the collection resource)
+
+### Combining resources into composites
+
+- when looking at home pages of sites like youtube, you will see that the pages aggregate information from a number of sources like video subscriptions, youtube posts, tags, subscribed channels, shorts, recommendations. these kinds of pages result from combining disparate resources into a single resource
+- create composite resources based on client usage patterns and performance/latency requirements.
+    - identify aggregate resources that can reduce the number of client/server round-trips
+
+### Supporting processing/computing functions
+
+e.g. google maps, give me directions from shibuya to shinagawa. credit card validation. currency exchange.
+
+- treat the processing function as a resource, use HTTP GET to fetch a representation containing the output of the proccessing function
+- use query parameters to supply inputs to the processing function
+
+```
+# Request
+GET /distance_calc?lata=47.6&longa=-143&latb=25&lngb=-100
+```
+
+- since processing functions are safe and idempotent, GET is the most appropriate HTTP method
+
+### When/How to use controllers to operate on resources
+
+- a controller is a resource that can atomically (in a single task) make changes to resources
+- lets you abstract away tedious operations/details and allows client to have a simple interface to perform operations
+
+```
+# Example without using a controller
+
+Merging address books
+1. Submit a GET request to the address book resource to download the address book from server
+2. load local list of contacts, merge with address book from server
+3. submit a PUT request to the address book resource to replace the entire address book with the merged one
+```
+
+```
+# Example with a controller
+
+Merging address books
+1. have client submit address book to server for a merge with a POST request
+2. server handles merging, adding new contacts, etc
+3. server returns response showing location of updated address book
+```
+
+- important to define a unique resource for these operations to avoid tunneling
+    - tunneling is when you use the same method on a single URI for different actions
