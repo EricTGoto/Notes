@@ -200,3 +200,42 @@ Merging address books
     - longer description with information on how to fix error condition, if applicable
     - identifier for error
     - link to learn more if applicable
+
+## Chapter 4: Designing URIs
+
+### Best practices for URIs
+
+- use domains and subdomains to logically group or partition resources for localization, distribution or other objectives
+    - e.g. localized representations via different subdomains
+```
+http://en.example.org/book/1234
+http://da.example.org/book/1234
+http://fr.example.org/book/1234
+
+# Or separation based on class of clients (browser vs API)
+
+http://www.example.org/book/1234
+http://api.example.org/book/1234
+```
+- use forward-slash as a separator to denote hierarchical relationships between resources
+- use comma and semicolon to indicate nonhierarchical elements in the path portion of the URI
+- use the hyphen and underscore character to improve the readbility of names in long path segments
+    - important to choose one and stick with it
+- use the ampersand to separate parameters in the query portion of the URI
+- avoid including file extensions in URIs
+
+important note: usually more important to focus on consistency of URIs rather than meticulous design of URIs
+
+### Make opaque URIs
+
+- avoid making URIs such that clients need to construct URIs from information returned from representations or documentation/reverse-engineering
+    - indicates tight coupling
+
+### URIs should be stable
+
+- URIs should be designed to last a long time
+- clients may store URIs in databases and config files, or even hard code them in code
+- design URIs based on stable concepts, identifiers and information
+- if a URI does change, honor old URIs and issue redirects with 301 (Moved Permanently)
+- good idea to monitor request traffic on the server once redirection is set up
+    - can know when to disable old URI once majority of clients use new URI, convert the 301 to 410 or 404
