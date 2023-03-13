@@ -239,3 +239,77 @@ important note: usually more important to focus on consistency of URIs rather th
 - if a URI does change, honor old URIs and issue redirects with 301 (Moved Permanently)
 - good idea to monitor request traffic on the server once redirection is set up
     - can know when to disable old URI once majority of clients use new URI, convert the 301 to 410 or 404
+
+## Chapter 8: Queries
+
+- querying for information is a common application of HTTP GET
+- queries usually involve three components
+    - filtering, sorting, projections
+    - projection is selecting certain fields in each entity to be included in the results
+
+### Designing URIs for queries
+
+- use query parameters to let clients specify filter conditions, sort fields and projections
+- treat query parameters as optional with sensible defaults
+- some examples of query parameters
+    - after for chronological filtering
+    - desc/asc for sorting
+    - fields to specify which fields to include in response
+
+### Supporting query requests with large inputs
+
+- use HTTP POST
+- introduces latency as results are not cacheable
+
+## Chapter 9: Web Caching
+
+- take advantage of caching to reduce end user percieved latency, increase reliability, reduce bandwidth usage and cost and reduce server load
+- cache can be in server network, CDN, or client network (aka forward proxies)
+
+### Setting Expiration Caching Headers
+
+- caches operate efficiently when they can serve as many responses as possible without contacting the origin server
+- expiration caching is designed to reduce the number of requests received by the origin server as well as reduce the bandwidth used by the application
+- expiration caching is based on `Cache-Control` and `Expires` headers
+    - the headers instruct clients and caches to keep a copy of the representation for a specific length of time
+- when serving a representation, include a `Cache-Control` header with a max age value (in seconds)
+    - to support HTTP 1.0 caches, include an `Expires` header with expiraiton date-time
+    - if you want cache not not serve cached copies set value to `no-cache`
+
+### When to set expiration caching headers
+
+- set expiration caching headers for responses of GET and HEAD for all successful response codes
+- may be good idea to add caching headers to 3xx and 4xx
+
+
+## Chapter 12: Security
+
+- gives brief intro on basic auth, digest auth, OAuth
+- dealing with sensitive information in URIs
+
+## Chapter 13: Extensibility and Versioning
+
+### Maintaining URI compatibility
+
+- keep URIs permanent
+- treat request URIs containing same query parameters but in different orders the same
+
+### When to Version
+
+- consider versioning when the server is unable to maintain compatibility or when clients require behavior or functionality different from other clients
+- versioning may introduce new problems:
+    - code changes in clients
+    - new links
+    - data may be incompatible
+
+### How to version
+
+- involves creatings new resources with new URIs
+
+examples:
+```
+http://www.example.org/v1/customer/1234
+http://www.example.org/v2/customer/1234
+http://www.example.org/customer/1234?version=v3
+http://v4.example.org/customer/1234
+```
