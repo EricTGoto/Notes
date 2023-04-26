@@ -189,3 +189,120 @@ ping: periodic request that a process sends to another to check if it's still av
 heartbeat: a message that a process periodically sends to another to inform that it is still up
 
 pings and heartbeats are used when processes communicate frequently with each other. if not, failure detection at communication time is OK
+
+### Chapter 8: Time
+
+- time plays an important role in figuring out the flow of execution
+- in a distributed system, there is no global shared clock that all processes agree on
+- learn about logical clocks which measure passage of times in terms of operations
+
+#### 8.2 Logical Clocks
+
+- a logical clock measures the passing of time in terms of logical operations
+
+**Lamport Clock**
+- every process has its own local logical clock with a numerical counter
+- counter is initialized at 0
+- process increments its counter before executing an operation
+- when the process sends a message, it increments its counter and sends a copy of it in the message
+- when the process receives a message, its counter is updated to 1 plus the maximum of its current counter and the message's counter
+- rules guarantee that if operation A happened before operation B, then the logical timestamp of A is less than B
+    - the reverse doesn't apply
+
+#### 8.3 Vector clocks
+
+- a logical clock that guarantees that if two operations can be ordered by their logical timestamps, then one must have happened before the other
+- implemented with a dictionary of counters, one key-value pair for each process in the system
+- each process has its own local copy of the clock
+- rules are very similar to lamport clock, just that each process updates its own counter in the dictionary
+- if timestamps can't be ordered, then the operations are considered to be concurrent
+
+Important takeaway: can't use physical clocks to derive order of events on different processes
+
+### Chapter 9: Leader Election
+
+Sometimes a process needs to have higher privileges like being able to have write access to resources or being able to delegate work to others. For this to happen, we need the system to be able to elect leaders and be able to elect new ones if the leader becomes unavailable.
+
+A leader election algorithm needs to guarantee that there is at most one leader at any given time and that an election eventually completes.
+- the two properties are called safety and liveness
+
+#### 9.1 Raft Leader Election
+
+- in this algorithm, a process can be in one of three states:
+    - follower state, in which a process recognizes another as a leader
+    - candidate state, process starts a new election proposing itself as a leader
+    - leader state, in which process is the leader
+
+- time is divided into ***election terms*** of arbitrary lengths represented with a logical clock
+- election terms begin with a new election
+- election is triggered when a follower fails to receive a periodic heartbeat from the leader containing the election term the leader was elected in
+    - some predefined timeout period
+- follower starts a new election by incrementing the election term and transitioning to the candidate state
+- follower votes for itself and sends a request with the current election term to all processes in the system to vote for it
+- other processes in the follower state will respond to requests on a first-come-first-serve basis
+- election ends if a candidate gets a majority of the votes
+- a process will remain in the candidate state until it wins, loses or the election times out (i.e a tie)
+    - in case of a tie, another election will start
+
+#### 9.2 Practical Considerations
+
+- Raft is one modern take on the leader election algorithm, but you will never need to implement from scratch as there are projects that abstract away the implementation such as etcd and ZooKeeper
+
+### Chapter 10: Replication
+
+- replication is an important part of distributed systems
+- replication enables availability, scalability and higher performance
+    - data can be stored on more than one node -> availability
+    - if data is on more than one node, then each node can provide access concurrency -> scalability + performance
+- challenge of replication is consistency
+- based on a technique called state machine replication where a single process, the leader, broadcasts operations that asks its followers to change its state, which will then make the followers state consistent with the leader
+    - however with network failures, and process failures we need fault tolerance
+
+#### 10.1 State Machine Replication
+
+After a leader is elected with Raft's leader election algorithm, we have a process that is able to make exclusive changes to the state.
+
+- leader will keep track of a log that clients ask of the system. the leader does not alter its local state yet.
+    - log contains the operation to be applied to the state, the index of the entry and the term number
+- leader will send messages to its followers with the contents of the log entries
+- when a follower receives new log entries, it appends the new entries to its local log and sends a message to acknowledge the change in state
+- when leader hears back from a majority of followers, it considers the entry to be committed and executes the operation in its local state
+
+We can see from the above algorithm that it is possible that in the event of a leader failure that there are processes with out of date state. To prevent these processes from becoming leaders, only candidates with all committed entries may win.
+- in the election process, term and (if necessary) log indexes will be compared to determine if a candidate is valid
+
+#### 10.2 Consensus
+
+Consensus is a problem in distributed systems where a set of processes agree on a value such that:
+- every non-faulty process descides some value
+- every non-faulty process eventually agrees on a value
+- final decision of every non-faulty process is the same everywhere
+
+#### 10.3 Consistency Models
+
+- since only the leader can make changes to the state, any operation that modifies state needs to go through the leader, but what about reads?
+- reads can be served by leader, follower or any combination
+- since followers are not necessarily consistent with the leader, two clients may have different views of the system's state if they query different processes
+
+**Strong Consistency**
+
+- also known as linearizability, is one of the strongest single-object consistency model and implies that every operation appears to take place atomically in an order consistent with the real time ordering of operations
+- reads and writes will go exclusively to the leader, leader needs to check with the followers to make sure it is still the leader before responding to a request
+    - increases time to serve a read
+
+**Sequential Consistency**
+
+- model in which operations appear to take place in some order which is consistent with the order of operations on each individual process
+- followers can lag behind the leader, but it will always receive updates in the same order as the leader
+- have to pin clients to followers
+
+**Eventual Consistency**
+
+- model in which the client is only guaranteed that the followers will converge to a final state if writes stop
+
+**CAP Theorem**
+
+- theory that says that you choose two of three of: strong consistency, availability and partition tolerance
+- in reality, network faults are a given so the choice is between strong consistency and availability
+- an alternative PACELC theorem states that in the case of a network partition (P) in a distributed computer system, you choose between availability (A) and consistency (C), else when the system is running normally without partitions, you have to choose between latency (L) and consistency (C)
+    - the stronger the consistency, the higher the latency of individual operations
