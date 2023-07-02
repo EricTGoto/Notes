@@ -306,3 +306,150 @@ Consensus is a problem in distributed systems where a set of processes agree on 
 - in reality, network faults are a given so the choice is between strong consistency and availability
 - an alternative PACELC theorem states that in the case of a network partition (P) in a distributed computer system, you choose between availability (A) and consistency (C), else when the system is running normally without partitions, you have to choose between latency (L) and consistency (C)
     - the stronger the consistency, the higher the latency of individual operations
+
+### Chapter 11: Transactions
+
+Transactions allow a group of operations to appear uniform and have exclusive access to modify some data. The operations will all complete successfully or none will complete.
+
+#### 11.1 ACID
+
+In a traditional relational database, a transaction is a group of operations for which the database guarantees a set of properties, known as ACID
+
+- Atomicity (A) guarantees that transactions are all or nothing
+- Consistency (C) guarantees that application/database level constraints like a column can't be null is always true
+    - different from the consistency we talked about before
+- Isolation (I) guarantees that concurrent execution of transactions doesn't cause any race conditions
+- Durability (D) guarantees that once the data store commits the transaction, the changes are persisted on durable storage
+    - a write-ahead log (WAL) is used to ensure durability
+
+#### 11.2 Isolation
+
+Concurrent transations that access the same data can run into all sorts of race conditions:
+- dirty write: when a transaction overwrites a value written by another transaction that hasn't been committed yet
+- dirty read: happens when a transaction observes a write from a transaction that hasn't completed yet
+- fuzzy read: happens when a transaction reads an object's value twice, but sees a different value in each read because a committed transaction updated the value between the two reads
+- phantom read: when a transaction reads a set of objects matching a specific condition, while another transaction writes to it - causes the read to be wrong after commit
+
+To protect against race conditions, transactions need to be isolated from others
+- isolation levels protect against race conditions and allows us to reason about concurrency
+- the stronger the isolation the less performant
+
+Examples of isolation levels:
+- Read uncommitted: protects against dirty writes
+- Read committed: protects against dirty reads
+- Serializable: Forbids all four of the listed race conditions
+    - guarantees that the side effects of a set of transactions appear to be the same as if they were executed sequentially
+    - doesn't say anything about the order
+
+**Implementing Serializability**
+
+- can be achieved with a pessimistic or an optimistic concurrency control mechanism
+
+Pressimistic Concurrency Control
+- pessimistic concurrency control uses locks to block other transactions from accessing a data item
+    - most popular protocol is two-phase locking (2PL).
+    - 2PL has two types of locks, one for reads and one for writes
+    - read lock can be shared by multiple transactions that access data in read-only, but it blocks transactions from acquiring a write lock
+    - write lock can only be held by a single transaction and blocks anyone else from acquiring read/write lock on a data item
+    - as name implies, 2PL has two phases: expanding and shrinking
+        - expanding: transaction allowed only to acquire locks
+        - shrinking: transaction allowed only to release locks
+        - if rules obeyes protocol guarantees serializability
+
+Optimisic Concurrency Control
+- no blocking, only checks for conflicts at the end of a transaction
+- if conflict detected, transaction is aborted or restarted
+- makes sense to use if you have read-heavy workloads as you don't want to be retrying the same transactions for performance reasons
+
+#### 11.3 Atomicity
+
+- guarantee that either all operations succeed or all fail
+
+**Two-phase commit (2PC)**
+
+- protocol used to implement atomic transaction commits across multiple processes
+- split into two phases: prepare and commit
+- assumes a process acts as coordinator and orchestrates other processes called participants
+    - usually client application that initiates transaction acts as the coordinator
+- when coordinator wants to commit a transaction to its participants, it sends a prepare request to the participants, if all participants reply that they are ready, the coordinator sends out a commit message
+    - if any process replies that it is not ready, coordinator sends an abort request to all participants
+- since this is a synchronous blocking protocol, if any of the participants isn't available the transaction can't make any progress
+
+#### 11.4 Asynchronous transactions
+
+- some transactions may take hours to execute, in which case blocking behaviour would be quite detrimental. Are there asynchronous non-blocking solutions that provide atomicity?
+- with a message log we can solve this issue
+- a log is an append only, totally ordered sequence of messages which consumers read in order
+- say we have two services that both need to update their state atomically. the services will both consume messages from the log and update their state
+- messages should be idempotent so that they can be re-read
+
+## Part 3: Scalability
+
+Introduction to 3 aspects of scalability:
+- functional decomposition
+    - taking an application and breaking it down into individual parts
+- partitioning
+    - splitting things up in multiple nodes
+- duplication
+ - creating more instances
+
+### Chapter 12: Functional Decomposition
+
+#### 12.1 Microservices
+
+- as a monolith grows, its components become more coupled over time and makes it harder for teams to modify the codebase, decreasing productivity
+- one way to mitigate this is by splitting up the monolith into independent services that communicate via API, called microservices
+
+Pros:
+- each service can be developed and operated by a single small team
+- a single team can increase velocity:
+    - smaller team can communicate more effectively
+    - codebase is smaller and easier to digest
+    - boundaries between services are stronger
+    - each service can be scaled independently
+
+Costs:
+- testing the integration of all the microservices can be challenging
+- debugging becomes challenging as code is executed on many machines
+
+From a practical perspective, good to start as a monolith then split into microservices as needed.
+
+#### 12.2 API gateway
+
+- a service that exposes the public API and acts as a layer for redirection is called the API gateway
+- API gateway provide features liek routing, composition and translation
+    - composition: query multiple services and compose their responses to a single one and return to client
+
+#### 12.4 Messaging
+
+- a form of indirect communication, meaning that the services do not have to be available for an immediate response
+- producer writes a message to a channel that delivers the message to a consumer on the other end
+- allows client to execute an operation on a service asynchronously
+    - useful for operations that can take a long time to execute, like processing video
+- can load balance and smooth out load by only allowing consumers to read messages at a specific pace
+
+Two different types of channels:
+
+1. point-to-point: specific message is delivered to exactly one consumer
+2. publish-subscribe: copy of same message is delivered to all consumers
+
+Communication styles:
+- one-way messaging: producer writes a message to a point-to-point channel with expectation that a consumer will eventually read and process it
+- request-response messaging: similar to regular request response except it goes through a point to point channel
+- broadcast messaging: producer writes a message to a publish-subscribe channel to broadcast it to all consumers
+    - generally used to notify services of events
+
+Tradeoffs:
+- order guarantees: since a message broker needs to scale, its implementation is also distributed and coordination is required, so many messsage brokers will forgo order for simplicity
+- delivery guarantees: at-most-once versus at-least-once
+- message durability
+- latency
+- message size
+
+Failures:
+- if a message continuously fails, send it to a dead letter channel, for a person to manually inspect.
+    - cant delete as you would have data loss
+
+Fault isolation:
+- a specific producer can emit bad messages that can degrade the system
+- have messages contain identifier so we can filter the bad producer to a low priority channel
