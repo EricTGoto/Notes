@@ -453,3 +453,186 @@ Failures:
 Fault isolation:
 - a specific producer can emit bad messages that can degrade the system
 - have messages contain identifier so we can filter the bad producer to a low priority channel
+
+### Chapter 13: Partitioning
+
+When a dataset no longer fits on a single node, it needs to be partitioned
+
+#### 13.1 Sharding strategies
+
+- when a client sends a request to a partitioned data store to read or write a key, we need to route the request to the appropriate node - how is the key mapped to specific nodes?
+
+<b>Hash partitioning</b>
+
+- use hash functions to assign keys to partitions
+- want to use a stable hasing algorithm that reduces the amount of data shuffling when new nodes are added
+    - example: consistent hashing: key mapped to point in a circle
+
+### Chapter 14: Duplication
+
+#### 14.1 Network load balancing
+
+- routing of requests across a pool of servers is implemented by a network load balancer
+- load balancer(LB) has one or more physical netowkr interface cars mapped to one or more virtual IP addresses (VIP), VIP associated with a pool of servers
+- clients only see VIP exposed by LB
+- LB supports features beyond load balancing like service discovery and health-checks
+
+Load Balancing:
+- best load distribution is combination of cached(delayed) load metrics with randomness
+    - randomly pick two servers and route request to least busy
+
+Service Discovery:
+- used by LB to discover available servers in the pool it can route requests to
+
+Health Checks:
+- used by LB to detect when a server can no longer serve requests and need to temporarily remove server from pool
+    - two types: passive and active
+- passive health check: performed when LB routes incoming request to servers downstream
+- active: downstream servers need to expose a health endpoint
+
+Load Balancing Implementations:
+
+- DNS Load balancing
+    - most basic form where IP added to a service's DNS record and client picks one when resolving DNS address
+- Transport layer load balancing:
+    - communicating directly with servers so can detect unavailable ones
+    - very fast, but only moving bytes around without knowing what they mean so they don't support higher-level features like rate limiting based on HTTP headers
+- Application layer load balancing
+    - is an HTTP reverse proxy
+    - receives an HTTP request, inspects it and sends to a backend server
+    - L7 LB typically behind an L4 LB
+- Geo load balancing
+    - an extension of DNS where location of client can be inferred from its IP
+    - DNS will return geographically closest L4 LB VIPs
+
+#### 14.2 Replication
+
+- when state is involved, we need coordination.
+- replication is the process of storing a copy of the same data in multiple nodes
+- replication and sharding are often combined: a distributed data store can be divided(sharded) into N partitions and distributed(replicated) over K nodes
+
+Single leader replication:
+
+- single leader, multiple followers/replicas
+- clients send writes to the leader and replicates changes to the followers
+- at high level there are fully synchronous and fully asynchronous and combinations of the two
+    - aynchronous replication: fast, not fault tolerant or consistent
+    - synchronous replication: slower as leader waits for writes to be replicated
+    - hybrid: like Raft where leader replicates to a majority of followers before returning response
+
+Multi-leader replication
+- more than one node can accept writes
+- used when throughput is too high for single node to handle or when leader needs to be available in multiple data centres (e.g. geographical concerns)
+- main issue is dealing with conflicting writes, need to implement a conflict resolution strategy
+    - simple strategy: have data have homing regions, i.e requests assigned to specific leaders
+
+Leaderless replication
+- responsibility of replicating and resolving conflicts offloaded to clients
+- more complex than multi-leader replciation
+
+#### 14.3 Caching
+
+- high speed storage layer that temporarily stores responses from downstream stores so future requests can be served directly from it to reduct load and increase performance of accessing frequently accessed data
+- for cache to be effective, need a high probability that requested data can be found in it
+
+Caching policies:
+- cache miss:
+    - client can get an error from the cache and then request from the downstream datastore and update the cache, cache is said to be a side cache
+    - inline cache, cache communicates directly with dependency and requests and returns the missing data item. client only accesses the cache
+- cache eviction:
+    - since cache will have a capacity, need to decide on an eviction policy
+    - common one is least recently used (LRU)
+- expiration policy
+    - dictate how long to store an entry
+    - simple policy is to define a time to live (TTL)
+
+In process cache:
+- simplest cache you can build is an in-memory dictionary within the clients environment
+- since each cache is independent of others, consistency issues will happen
+- entries need to be fetches once per cache, creating extra downstream pressure proportional to the number of clients
+
+Out of process cache:
+- external cache, shared across all service instances
+- more complex and expensive, but reduces consistency issues and load on dependency
+- decouples client from dependency, but load just shifted to the external cache
+- if load increases, the cache will need to be scaled out
+    - have to use something like consistent hasing to partition well
+- latency is increased since we need a network call
+- need to make sure that if the out of process cache goes down, the ssystem will still work
+    - a backup in-process cache can work
+    - dependency needs to be able to handle extra load
+
+## Part 3: Resiliency
+
+### Chapter 15: Common failure causes
+
+- single point of failure: when one component can bring down the entire system
+    - a subtle example is an HTTP API on top of TLS using a certificate that needs to be manually renewed
+    - single points of failure should be identified when system is architected
+- unreliable network
+- slow processes
+    - memory leaks
+    - threads, sockets not being returned
+- unexpected load
+- cascading failures
+    - when one failure leads to a chain of failures
+
+### Chapter 16: Downstream resiliency
+
+With distributed systems, failures can happen from a variety of factors. Servers, networks, load balancers, software, etc can all introduce error. To make distributed systems more reslient we can use timeouts, retries and backoffs.
+
+Often, when a call fails, there is a partial or transient failure that can be overcome by retrying the request.
+- partial failure: when a percentage of requests fail
+- transient failure: when a request fails for a short period of time
+
+However, retries can introduce load to the system so we need ways to minimize this and we do this by introducing timeouts and setting intervals between retries called backoff.
+
+#### 16.1 Timeout
+
+When a call fails and a client or service retries, it will hold onto the resources and eventually the server can run out of these resources. That's why introducing timeouts so that eventually these resources are returned is important.
+
+- when making a network call, set a timeout
+    - prevent resource leaks
+    - best practice is to set a timeout on any call (remote or local)
+- timeout too high not so useful since resources still consumed during timeout
+- timeout too short increases traffic and latency as requests are retried
+- use latency metrics to decide timeout. think about acceptable rate of false timeouts like 0.1%
+
+#### 16.2 Retries and backoff
+
+When a request fails or times out, there is a chance that the request failed because of a momentary network failure. If this is the case, then, we would want to retry the request so that it can succeed.
+
+What if the failure was caused by overload? Then we would want to retry with a delay called backoff.
+- most common pattern is called capped exponential backoff where the wait time between retries is exponentially increased with a cap
+- other problems with retries:
+    - distributed systems have layers, so we don't want to be retrying in all layers, otherwise the number of retries will be multiplied per layer
+    - should only retry requests that don't have side effects
+    - some failures are not worth retrying, like client errors
+    - if retry time is all set to the same time, then retries can cause overload so we need to introduce jitter - randomness to the backoff time
+
+### Chapter 17: Upstream resiliency
+
+#### 17.1 Load Shedding
+
+- when a server is operating at its capacity, it should start rejecting excess requests
+- overload should be measureable and actionable
+- when a server detects that it is overloaded, it can reject incoming requests by returning a 503 (Service Unavailable) - called load shedding
+- however, depending on how the the rejection is handled, the server will still have to perform computations to reject it, and if there are too many requests, then the cost of rejecting becomes too much
+
+#### 17.2 Load Leveling
+
+- alternative to load shedding, can be used when clients don't expect a response in a short time frame
+- introduct messaging channel between clients and service
+- channel decouples load from service by allowing service to pull requests at its own pace from the channel
+
+#### 17.3 Rate limiting
+
+- rejecting request when a specific quota is exceeded
+- when limit is exceeded, should send a response indicating that the quota has been exceeded, e.g. 429 Too Many Requests
+
+
+#### 17.6 Watchdog pattern
+
+- allow crashes to happen and then just restart the service instead of trying to debug degradation at the instance of failure
+    - can delay debugging until later
+- have a separate process running in the background that occasionally wakes up and monitors the service's health, if it detects that the service has degraded, it will restart it
