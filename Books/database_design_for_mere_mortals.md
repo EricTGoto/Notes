@@ -181,3 +181,8 @@ Identifying Degree of Participation for each table:
 
 - degree of participation indicates the minimum number of records that a given table must have associated with a single record in the related table and the max number of records that the table is allowed to have associated with a single record in the related table
 - indicated by two numbers separated by a comma. e.g 1,5
+
+## Chapter 11: Business Rules
+
+- a business rule is a statement that imposes a constraint on a specific aspect of the database
+    - the rules is based on how the organization(business) uses its data
